@@ -146,6 +146,6 @@ Commit messages should be in the present tense
 
 ## Project Feedback + Evaluation
 
-- Due code review by EOD Monday following Friday's presentation.
+- Due code review by EOD Monday following Friday's presentation
 
 ---
