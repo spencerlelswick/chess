@@ -2,7 +2,7 @@
 
 ## Overview
 
-Chess is the Game of Kings where two armies (White and Black) clash for control of the center and the objective to checkmate the oppoents king.
+Chess is the Game of Kings where two armies (White and Black) clash for control of the center, overpower the other in order to checkmate the opponents king.
 
 ## Planning & Presentation Requirements
 ### Planning - Due 7.24.23:
