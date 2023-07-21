@@ -1,5 +1,7 @@
 # Chess 
 
+<img src="https://images.chesscomfiles.com/uploads/v1/chess_term/b825c6ea-7087-11ea-8020-d3e4d3707253.da7e8779.5000x5000o.ce54998a07e9.png" width="400">
+
 ## Overview
 
 Chess is the Game of Kings where two armies (White and Black) clash for control of the center, overpower the other in order to checkmate the opponents king.
