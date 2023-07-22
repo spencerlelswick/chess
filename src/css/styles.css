@@ -37,3 +37,10 @@ aside {
   grid-template-columns: 1fr 3fr;
   grid-template-rows: 1fr 3fr;
 }
+
+.square {
+  width: 20px;
+  height: 20px;
+  color: white;
+  border: 1px black solid;
+}
