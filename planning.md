@@ -1,153 +1,84 @@
 # Chess 
 
-<img src="https://images.chesscomfiles.com/uploads/v1/chess_term/b825c6ea-7087-11ea-8020-d3e4d3707253.da7e8779.5000x5000o.ce54998a07e9.png" width="400">
+<img src="https://i.imgur.com/d89A4Zm.png" width="400">
 
 ## Overview
 
 Chess is the Game of Kings where two armies (White and Black) clash for control of the center, overpower the other in order to checkmate the opponents king.
 
-## Planning & Presentation Requirements
-### Planning - Due 7.24.23:
+## Planning & Presentation 
 
-use github
-planning.md
+### Wireframe
 
-- Choice of Game:
+<img src="https://i.imgur.com/BgWVIzL.png" width="100%">
 
-    ☐ Chess.
+# Chess pseudo code 
 
-	☐ A wireframe of your "main" game screen.
+1. positions Object - will hold an array of random positions, and solutions
 
-	☐ Pseudocode for the overall game play. 
+2. Board Class - Will hold state of each square
 
-### Presentation - 7.28.23:
-7minutes to present game
+3. Square Class - Will hold state of color, coordinates and Piece occupying the square
 
-1. **Introduce the Project: **
+3. Piece Class - Will define behavior of a piece
 
-	☐ Intro your game by paraphrasing the README.
-	
-2. **Demonstrate the Project:**
+4. King Class (and each other piece) - Will extend Piece and implement their own movement and capture rules
 
-	☐ Link a launcher in README.
-	
-	☐ Play the game! 
-	
-3. **Show/discuss your code:**
+#### Populate board with pieces
+- will need to pass in a FEN string 
 
-	☐ Briefly show the HTML & CSS. 
-	
-	☐ Show the JavaScript and discuss your favorite function.
+- populate the currentBoard for the given position
 
-4. **Share the experience:**
+#### Receive player moves
+- will need to take two inputs from the user, starting square and destination square and determine if it matches the solution
 
-	☐ What was your biggest challenge?
-	
-	☐ What are your key learnings/takeaways?
-	
-5. **Q & A + Feedback**
+#### Play computer moves
+- will need to play the opponents moves automatically via engine, two play mode, or solution from FEN:
 
----
+```
+4r2r/2pQ1pp1/5k1p/8/6P1/P3qP1P/1PP5/3R3K w - - 1 33
+```
+- two character nodes will reference a Pawn.
+- three character nodes will reference a major or minor piece denoted by the first capital letter. e.g. 
 
-## Technical Requirements
+``` N = kNight, K = King, R = Rook ```
 
-### Your App Must:
+### Check moves
+- Will need to check attacked squares
+- Will need to check occupied squares
+- Will Special rules for:
+- - castling
+- - long castling
+- - pawn promotion
 
-☐ **Render a game in the browser**.
 
-☐ **Include win/loss logic and render win/loss messages in HTML.** 
+### Check for Checkmate
+- on start of every turn, if the players king is attacked, the player is in check
 
-☐ Include separate HTML, CSS & JavaScript files.
+#### If a player is in check there are a few options:
+- They must move their king to an unattacked square
+- They must block the check with another piece
+- They must capture the piece checking the king
+- They cannot castle out of, or through check
 
-☐ Use vanilla JavaScript, not 3rd party JS libraries.
 
-☐ Have **properly indented HTML, CSS & JavaScript**. 
+### eventListeners
+- The board will have an event listener, return square clicked will be the starting square
+- The board will have an event listener, return square clicked will be the destination square
+- Hint button will change the color of the correct starting square
+- Solution button will change the color of the correct starting square and correct destination square.
 
-☐ Remove **commented out code** 
-
-☐ sensibly named functions and variables 
-
-☐ **Be coded in a consistent** manner. 
-
-☐ **Be deployed online** use GitHub Pages 
-
----
-
-## Necessary Deliverables
-
-☐ The code hosted on GitHub Pages 
-
-- **A ``README.md`` file** with these sections:
-
-  ☐ **\<Your game's title\>**
-
-  ☐ **A description of your game**
-  
-  ☐ **Screenshot(s):** of game
-  
-  ☐ **Technologies Used**
-  
-  ☐ **Getting Started**: include the link to your deployed game any instructions
-  
-  ☐ **Next Steps**: Planned future enhancements (icebox items).
-  
-
-☐ **Frequent commits**
-
-Commit messages should be in the present tense 
-
----
-
-## Choose From the Following Games
-
-1. **Trivia Game** 
-
-1. **Spaceman**
-
-1. **Concentration (Memory Game)**
-
-1. **Slot Machine**
-
-1. **Blackjack**
-
-1. **Simon**
-
-1. **War** 
-
-1. **Mastermind**
-
-1. **Minesweeper**
-
-1. **Checkers**
-
-1. **Mancala**
-
-1. **Roulette**
-
-1. **Video Poker**
-
-1. **Craps**
-
-1. **Solitaire**
-
-1. **Battleship**
-
-**Only the above games are approved.  Any other choices, which is extremely discouraged, must receive approval from your instructor before starting your planning (wireframes & pseudocode)!**
-
----
-
-## Suggestions
-
-- **The BEST advice is to follow the guidelines and principles in the** (./guide-to-building-a-browser-game.md). 
-
-- **Theme your game**
-
-- **Use your Development Tools** 
-
----
-
-## Project Feedback + Evaluation
-
-- Due code review by EOD Monday following Friday's presentation
+### Rendering to the DOM
+- board
+- squares
+- pieces
+- game data
+- Notifications
+- - correct confirmation
+- - incorrect notification
+- Buttons
+- - Hint
+- - Solution
+- Rating
 
 ---
