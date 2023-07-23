@@ -1,8 +1,8 @@
 # chess
 
-- **A ``README.md`` file** with these sections:
+- **test** with these sections:
 
-  ☐ **\<Your game's title\>**
+  ☐ **Chess**
 
   ☐ **A description of your game**
   

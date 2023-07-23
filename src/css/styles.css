@@ -31,6 +31,10 @@ aside {
   align-items: center;
 }
 
+.header-logo {
+  width: 100%;
+}
+
 .app-grid {
   height: 100vh;
   display: grid;
