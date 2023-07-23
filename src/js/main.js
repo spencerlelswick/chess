@@ -6,6 +6,7 @@ class Board {
 
   constructor() {
     this.squares = []
+    //maybe make this static
     this.files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     this.ranks = [1, 2, 3, 4, 5, 6, 7, 8]
   }
@@ -57,9 +58,7 @@ class Board {
       if (localRank) drawnBoard.push(localRank)
 
     }
-
     console.log(drawnBoard)
-
   }
 }
 
@@ -68,7 +67,7 @@ class Square {
     this.file = file
     this.rank = rank
     this.color = color ? 'light' : 'dark'
-    this.piece = null
+    this.piece = piece ? piece : null
   }
 }
 
@@ -90,6 +89,7 @@ class Pawn extends Piece {
     this.movementRange = 2
   }
   move() {
+    //moving a pawn restricts its range to 1 for rest of game.
     this.movementRange = 1
     console.log(`moving: ${this.name} to square`)
   }
@@ -106,6 +106,7 @@ class Knight extends Piece {
 }
 
 function init() {
+
   consolePlay()
 }
 
