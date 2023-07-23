@@ -11,19 +11,50 @@ class Board {
   }
   makeBoard() {
     let currColor = true
-    for (let rank of this.ranks) {
-      for (let file of this.files) {
+    for (let file of this.files) {
+      for (let rank of this.ranks) {
         this.squares.push(new Square(rank, file, currColor))
         currColor = !currColor
       }
     }
   }
   toggleSquareColor() {
-    toggleColor ? 'brown' : 'white'
+    toggleColor ? 'dark' : 'light'
   }
   drawBoard() {
-    for(let square in this.squares){
-      
+    const boardRanks = [[]]
+    let currFile = 0
+    let count = 0
+    for (let square in this.squares) {
+      console.log(square)
+      console.log(count)
+      boardRanks[currFile].push(this.squares[square])
+      count++
+      if (count === this.files.length) {
+        currFile !== this.files.length ? boardRanks.push([]) : null
+        currFile++
+        count = 0
+      }
+    }
+    //TODO: Possible bug adding empty array at idx 0.
+    //TODO: Possible bug drawing board ranks in reverse order
+    boardRanks.reverse()
+
+    //temporary console.log board
+    return boardRanks;
+  }
+  //temp method to draw board in console.
+  consoleDrawboard() {
+    let localRank = ''
+    const consoleBoard = this.drawBoard()
+    console.log(consoleBoard)
+    for (let i = 0; i < consoleBoard.length; i++) {
+      localRank = ''
+      for (let j = 0; j < consoleBoard[i].length; j++) {
+        let localSq = consoleBoard[i][j]
+        localRank += `| ${localSq.rank}${localSq.file} `
+      }
+      console.log(localRank)
     }
   }
 }
@@ -32,7 +63,7 @@ class Square {
   constructor(rank, file, color) {
     this.rank = rank
     this.file = file
-    this.color = color ? 'white' : 'brown'
+    this.color = color ? 'light' : 'dark'
   }
 }
 
@@ -49,7 +80,8 @@ class Pawn extends Piece {
 function init() {
   const board = new Board()
   board.makeBoard()
-  console.log(board.squares)
+  board.drawBoard()
+  board.consoleDrawboard()
 }
 
 
