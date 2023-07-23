@@ -26,8 +26,7 @@ class Board {
     let currFile = 0
     let count = 0
     for (let square in this.squares) {
-      console.log(square)
-      console.log(count)
+
       boardRanks[currFile].push(this.squares[square])
       count++
       if (count === this.files.length) {
@@ -46,24 +45,30 @@ class Board {
   //temp method to draw board in console.
   consoleDrawboard() {
     let localRank = ''
+    const drawnBoard = []
     const consoleBoard = this.drawBoard()
-    console.log(consoleBoard)
     for (let i = 0; i < consoleBoard.length; i++) {
       localRank = ''
       for (let j = 0; j < consoleBoard[i].length; j++) {
         let localSq = consoleBoard[i][j]
-        localRank += `| ${localSq.rank}${localSq.file} `
+        // localRank += `| ${localSq.rank}${localSq.file} `
+        localRank += `|${localSq.piece}`
       }
-      console.log(localRank)
+      drawnBoard.push(localRank)
+
     }
+
+    console.log(drawnBoard)
+
   }
 }
 
 class Square {
-  constructor(rank, file, color) {
+  constructor(rank, file, color, piece) {
     this.rank = rank
     this.file = file
     this.color = color ? 'light' : 'dark'
+    this.piece = '_'
   }
 }
 
