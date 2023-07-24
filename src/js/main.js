@@ -28,7 +28,6 @@ class Board {
     let dst = null
     let clickCount = 0
     boardEl.addEventListener('click', e => {
-      console.log(`'clicked' ${clickCount}`)
       clickCount++
       if (!src && clickCount === 1) {
         src = this.squares[this.squareIndex(e.target.id)]
@@ -68,11 +67,13 @@ class Board {
   }
   //takes a src,dst. Moves piece to dst, removes from src.
   updatePieceSquare(src, dst) {
-    console.log(src.piece, dst)
-    src.piece.move()
-    dst.piece = src.piece
-    //TODO: src.piece.move(src, dst) refactor to pass in. Piece should verify movement
-    src.piece = null
+    let srcIdx = this.squareIndex(`${src.file}${src.rank}`)
+    let dstIdx = this.squareIndex(`${dst.file}${dst.rank}`)
+
+    if (src.piece.move(srcIdx, dstIdx)) {
+      dst.piece = src.piece
+      src.piece = null
+    }
     board.drawBoard()
   }
   // takes a square a1-h8 and converts it to square index
@@ -130,12 +131,7 @@ class Square {
 
 class Piece {
   constructor(color) {
-    // canMove
-    // canCapture
-    // canPromote
-
     this.color = color
-
   }
 }
 
@@ -145,12 +141,24 @@ class Pawn extends Piece {
     this.type = 'pawn'
     this.name = color === 'white' ? 'P' : 'p'
     this.movementRange = 2
+    this.moveDistance = color === 'white' ? -8 : 8
+    this.possibleMoves = []
   }
-  move() {
-    //moving a pawn restricts its range to 1 for rest of game.
-    this.movementRange = 1
-    console.log(`moving: ${this.name} to square`)
-    return true;
+  move(src, dst) {
+    console.log(src)
+    console.log(dst)
+
+    //check if dst is occupied
+    //check if path is occupied
+
+    if (src + this.moveDistance === dst) {
+      //moving a pawn restricts its range to 1 for rest of game.
+      console.log('pawn moved!')
+      this.movementRange = 1
+      return true;
+    }
+
+    return false
   }
 }
 
