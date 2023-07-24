@@ -25,32 +25,31 @@ class Board {
     toggleColor ? 'dark' : 'light'
   }
   drawBoard() {
+    const moveBtnEl = document.querySelector('.submit-move')
+    const boardEl = document.querySelector('.board')
     let sourceInput = document.getElementById("source");
     let destinationInput = document.getElementById("destination");
-    const moveBtnEl = document.querySelector('.submit-move')
-    moveBtnEl.addEventListener('click', e => {
-      e.preventDefault()
-      let source = sourceInput.value
-      let destination = destinationInput.value
-      let src = board.sqaureIndex(source)
-      console.log(src)
-      let dst = board.sqaureIndex(destination)
-      playerMove(src, dst)
-      this.updatePieceSquare(src, dst)
+    boardEl.addEventListener('click', e => {
+      console.log(e.target.id)
+      // let source = e.target
+      // let destination = 34
+      // let src = board.sqaureIndex(source)
+      // let dst = board.sqaureIndex(destination)
+      // playerMove(src, dst)
+      // this.updatePieceSquare(src, dst)
     })
-    const boardEl = document.querySelector('.board')
     boardEl.replaceChildren()
     this.squares.forEach(sq => {
       const square = document.createElement("div");
       // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : `${sq.file}${sq.rank}`);
       const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
       square.appendChild(pieceName)
+      square.setAttribute('id', `${sq.file}${sq.rank}`)
       square.classList.add(sq.color === 'light' ? 'light-square' : 'dark-square')
       boardEl.appendChild(square)
       boardEl.classList.add()
     });
   }
-
   //takes a src,dst. Moves piece to dst, removes from src.
   updatePieceSquare(src, dst) {
     this.squares[dst].piece = board.squares[src].piece
