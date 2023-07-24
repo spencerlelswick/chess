@@ -53,7 +53,8 @@ class Board {
       for (let j = 0; j < consoleBoard[i].length; j++) {
         let localSq = consoleBoard[i][j]
         // localRank += `| ${localSq.rank}${localSq.file} `
-        localSq.piece ? localRank += `|${localSq.piece.name} ` : localRank += `|${localSq.file}${localSq.rank}`
+        // localSq.piece ? localRank += `|${localSq.piece.name} ` : localRank += `|${localSq.file}${localSq.rank}`
+        localSq.piece ? localRank += `|${localSq.piece.name} ` : localRank += `|__`
       }
       if (localRank) drawnBoard.push(localRank)
 
@@ -76,9 +77,8 @@ class Piece {
     // canMove
     // canCapture
     // canPromote
-    this.type = 'pawn'
+
     this.color = color
-    this.name = 'p'
 
   }
 }
@@ -86,6 +86,8 @@ class Piece {
 class Pawn extends Piece {
   constructor(color) {
     super(color)
+    this.type = 'pawn'
+    this.name = color === 'white' ? 'P' : 'p'
     this.movementRange = 2
   }
   move() {
@@ -94,16 +96,98 @@ class Pawn extends Piece {
     console.log(`moving: ${this.name} to square`)
   }
 }
+
 class Knight extends Piece {
   constructor(color) {
     super(color)
     this.type = 'knight'
-    this.name = 'N'
+    this.name = color === 'white' ? 'N' : 'n'
   }
   move() {
     console.log(`moving: ${this.name} to square`)
   }
 }
+class King extends Piece {
+  constructor(color) {
+    super(color)
+    this.type = 'king'
+    this.name = color === 'white' ? 'K' : 'k'
+  }
+  move() {
+    console.log(`moving: ${this.name} to square`)
+  }
+}
+
+
+class Queen extends Piece {
+  constructor(color) {
+    super(color)
+    this.type = 'queen'
+    this.name = color === 'white' ? 'Q' : 'q'
+  }
+  move() {
+    console.log(`moving: ${this.name} to square`)
+  }
+}
+class Rook extends Piece {
+  constructor(color) {
+    super(color)
+    this.type = 'rook'
+    this.name = color === 'white' ? 'R' : 'r'
+  }
+  move() {
+    console.log(`moving: ${this.name} to square`)
+  }
+}
+
+
+class Bishop extends Piece {
+  constructor(color) {
+    super(color)
+    this.type = 'bishop'
+    this.name = color === 'white' ? 'B' : 'b'
+  }
+  move() {
+    console.log(`moving: ${this.name} to square`)
+  }
+}
+
+//DOM
+let sourceInput = document.getElementById("source");
+let destinationInput = document.getElementById("destination");
+let source
+let destination
+const moveBtnEl = document.querySelector('.submit-move')
+moveBtnEl.addEventListener('click', e => {
+  e.preventDefault()
+  source = sourceInput.value
+  destination = destinationInput.value
+  let src = sqaureIndex(source)
+  console.log(src)
+  let dst = sqaureIndex(destination)
+  playerMove(src, dst)
+})
+
+function playerMove(src, dst) {
+  //check if player turn
+  //check for check
+  //check for checkmate
+  //check for stalemate
+  //check for draw
+  //calculate movement
+
+
+}
+
+// takes a square a1-h8 and converts it to square index
+function sqaureIndex(square) {
+  let file = square.slice(0, 1)
+  let rank = parseInt(square.slice(1, 2))
+  let sq = board.squares.filter(sq => sq.file === file).filter(sq => sq.rank === rank)
+  let squareIndex = board.squares.findIndex(square => square === sq[0])
+  return squareIndex
+}
+
 
 function init() {
 
@@ -112,6 +196,7 @@ function init() {
 
 function consolePlay() {
   board.drawBoard()
+  populateBoard()
   board.consoleDrawboard()
 }
 
@@ -119,53 +204,91 @@ const board = new Board()
 board.makeBoard()
 
 
-// Console pawn test
-//add piece to e2 (pawn)
-board.squares[12].piece = new Pawn('white')
-board.squares[52].piece = new Knight('black')
+//TODO: Refactor
+function populateBoard() {
+  board.squares[0].piece = new Rook('white')
+  board.squares[1].piece = new Knight('white')
+  board.squares[2].piece = new Bishop('white')
+  board.squares[3].piece = new Queen('white')
+  board.squares[4].piece = new King('white')
+  board.squares[5].piece = new Bishop('white')
+  board.squares[6].piece = new Knight('white')
+  board.squares[7].piece = new Rook('white')
+  board.squares[8].piece = new Pawn('white')
+  board.squares[9].piece = new Pawn('white')
+  board.squares[10].piece = new Pawn('white')
+  board.squares[11].piece = new Pawn('white')
+  board.squares[12].piece = new Pawn('white')
+  board.squares[13].piece = new Pawn('white')
+  board.squares[14].piece = new Pawn('white')
+  board.squares[15].piece = new Pawn('white')
 
-//move pawn to e4! best by test.
-consolePlay()
 
-//player clicks e2 and clicks e4
+  board.squares[56].piece = new Rook('black')
+  board.squares[57].piece = new Knight('black')
+  board.squares[58].piece = new Bishop('black')
+  board.squares[59].piece = new Queen('black')
+  board.squares[60].piece = new King('black')
+  board.squares[61].piece = new Bishop('black')
+  board.squares[62].piece = new Knight('black')
+  board.squares[63].piece = new Rook('black')
+  board.squares[55].piece = new Pawn('black')
+  board.squares[54].piece = new Pawn('black')
+  board.squares[53].piece = new Pawn('black')
+  board.squares[52].piece = new Pawn('black')
+  board.squares[51].piece = new Pawn('black')
+  board.squares[50].piece = new Pawn('black')
+  board.squares[49].piece = new Pawn('black')
+  board.squares[48].piece = new Pawn('black')
+}
 
-//check if square ahead is occupied
-if (!board.squares[20].piece) console.log(`path clear for pawn on ${board.squares[12 + 8].file}${board.squares[12 + 8].rank}`)
-//check if destination square is occupied
-if (!board.squares[28].piece) console.log(`path clear for pawn on ${board.squares[12 + 8 + 8].file}${board.squares[12 + 8 + 8].rank}`)
+// // Console pawn test
+// //add piece to e2 (pawn)
+// board.squares[12].piece = new Pawn('white')
+// board.squares[52].piece = new Knight('black')
+
+// //move pawn to e4! best by test.
+// consolePlay()
+
+// //player clicks e2 and clicks e4
+
+// //check if square ahead is occupied
+// if (!board.squares[20].piece) console.log(`path clear for pawn on ${board.squares[12 + 8].file}${board.squares[12 + 8].rank} `)
+// //check if destination square is occupied
+// if (!board.squares[28].piece) console.log(`path clear for pawn on ${board.squares[12 + 8 + 8].file}${board.squares[12 + 8 + 8].rank} `)
 //move the pawn to e4
-board.squares[28].piece = board.squares[12].piece
+// board.squares[28].piece = board.squares[12].piece
 
-//set pawn hasMoved() to true, limiting is movement range to 1 square.
-board.squares[12].piece.move()
+// //set pawn hasMoved() to true, limiting is movement range to 1 square.
+// board.squares[12].piece.move()
 
-//remove the pawn from e2
-board.squares[12].piece = null
-consolePlay()
+// //remove the pawn from e2
+// board.squares[12].piece = null
+// consolePlay()
 
 
-//knights can move to any square without being blocked
-board.squares[37].piece = board.squares[52].piece
-board.squares[52].piece.move()
-board.squares[52].piece = null
+// //knights can move to any square without being blocked
+// board.squares[37].piece = board.squares[52].piece
+// board.squares[52].piece.move()
+// board.squares[52].piece = null
 
-consolePlay()
+// consolePlay()
 
-//check if pawn can advance forward
-if (!board.squares[28 + 8].piece) console.log(`path clear for pawn on ${board.squares[28 + 8].file}${board.squares[28 + 8].rank}`)
+// //check if pawn can advance forward
+// if (!board.squares[28 + 8].piece) console.log(`path clear for pawn on ${board.squares[28 + 8].file}${board.squares[28 + 8].rank} `)
 
-//check if pawn can capture
+// //check if pawn can capture
 
-if (board.squares[28 + 7].piece) console.log(`Capture detected! ${board.squares[28 + 7].file}${board.squares[28 + 7].rank}`)
-if (board.squares[28 + 9].piece) console.log(`Capture detected! ${board.squares[28 + 9].file}${board.squares[28 + 9].rank}`)
+// if (board.squares[28 + 7].piece) console.log(`Capture detected! ${board.squares[28 + 7].file}${board.squares[28 + 7].rank} `)
+// if (board.squares[28 + 9].piece) console.log(`Capture detected! ${board.squares[28 + 9].file}${board.squares[28 + 9].rank} `)
 
-consolePlay()
+// consolePlay()
 
-//if capture is detected, the move is legal
-board.squares[37].piece = board.squares[28].piece
-board.squares[28].piece = null
-console.log('Pawn captures Knight on f5')
-consolePlay()
+// //if capture is detected, the move is legal
+// board.squares[37].piece = board.squares[28].piece
+// board.squares[28].piece = null
+// console.log('Pawn captures Knight on f5')
+// consolePlay()
 
 
 
@@ -175,5 +298,5 @@ consolePlay()
 
 //////////////////////////////////////////////////////////
 // TODO: Make init function
-// init()
+init()
 // 
