@@ -1,7 +1,5 @@
 console.log('js:loaded')
 
-// const boardEl = document.querySelector('board')
-
 class Board {
 
   constructor() {
@@ -25,23 +23,49 @@ class Board {
     toggleColor ? 'dark' : 'light'
   }
   drawBoard() {
-    const moveBtnEl = document.querySelector('.submit-move')
     const boardEl = document.querySelector('.board')
-    let sourceInput = document.getElementById("source");
-    let destinationInput = document.getElementById("destination");
+    let src = null
+    let dst = null
+    let clickCount = 0
     boardEl.addEventListener('click', e => {
-      console.log(e.target.id)
-      // let source = e.target
-      // let destination = 34
-      // let src = board.sqaureIndex(source)
-      // let dst = board.sqaureIndex(destination)
-      // playerMove(src, dst)
-      // this.updatePieceSquare(src, dst)
+      if (clickCount > 1 || clickCount < 0) {
+        clickCount = 0
+        src = null
+        dst = null
+      }
+      clickCount++
+      console.log(`${src} source, ${clickCount} clickCount`)
+      if (!src && clickCount === 1) {
+        src = this.squares[this.sqaureIndex(e.target.id)]
+        if (this.squares[this.sqaureIndex(e.target.id)].piece === null) {
+          clickCount = 0
+          src = null
+          dst = null
+        } else {
+          console.log('setting src')
+
+          src = this.squares[this.sqaureIndex(e.target.id)]
+          console.log(`${src.file}${src.rank}`)
+        }
+      } else {
+        console.log('setting dst')
+        dst = this.squares[this.sqaureIndex(e.target.id)]
+        if (src === dst) {
+          clickCount = 0
+          src = null
+          dst = null
+        } else {
+          console.log(`${src.file}${src.rank} - ${dst.file}${dst.rank}`)
+          playerMove(src, dst)
+          this.updatePieceSquare(src, dst)
+        }
+      }
+      clickCount = 0
     })
     boardEl.replaceChildren()
     this.squares.forEach(sq => {
       const square = document.createElement("div");
-      // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : `${sq.file}${sq.rank}`);
+      // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : `${ sq.file }${ sq.rank }`);
       const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
       square.appendChild(pieceName)
       square.setAttribute('id', `${sq.file}${sq.rank}`)
@@ -52,9 +76,13 @@ class Board {
   }
   //takes a src,dst. Moves piece to dst, removes from src.
   updatePieceSquare(src, dst) {
-    this.squares[dst].piece = board.squares[src].piece
-    this.squares[src].piece.move(src, dst)
-    this.squares[src].piece = null
+    console.log(src.piece, dst)
+    let moveable = src.piece.move()
+    if (moveable) {
+      dst.piece = src.piece
+      //TODO: src.piece.move(src, dst) refactor to pass in. Piece should verify movement
+      src.piece = null
+    }
     board.drawBoard()
   }
   // takes a square a1-h8 and converts it to square index
@@ -132,6 +160,7 @@ class Pawn extends Piece {
     //moving a pawn restricts its range to 1 for rest of game.
     this.movementRange = 1
     console.log(`moving: ${this.name} to square`)
+    return true;
   }
 }
 
@@ -143,8 +172,11 @@ class Knight extends Piece {
   }
   move() {
     console.log(`moving: ${this.name} to square`)
+    return true;
+
   }
 }
+
 class King extends Piece {
   constructor(color) {
     super(color)
@@ -153,6 +185,8 @@ class King extends Piece {
   }
   move() {
     console.log(`moving: ${this.name} to square`)
+    return true;
+
   }
 }
 
@@ -164,8 +198,11 @@ class Queen extends Piece {
   }
   move() {
     console.log(`moving: ${this.name} to square`)
+    return true;
+
   }
 }
+
 class Rook extends Piece {
   constructor(color) {
     super(color)
@@ -174,6 +211,8 @@ class Rook extends Piece {
   }
   move() {
     console.log(`moving: ${this.name} to square`)
+    return true;
+
   }
 }
 
@@ -185,10 +224,10 @@ class Bishop extends Piece {
   }
   move() {
     console.log(`moving: ${this.name} to square`)
+    return true;
+
   }
 }
-
-
 
 function playerMove(src, dst) {
   //check if player turn
@@ -198,10 +237,7 @@ function playerMove(src, dst) {
   //check for draw
   //check for piece on square
   //calculate movement
-  console.log(`moving ${src} to ${dst}`)
-  console.log(`moving ${board.squares[src].piece.name} to ${board.squares[dst].file}${board.squares[dst].rank}`)
 }
-
 
 function init() {
   board.makeBoard()
@@ -213,9 +249,9 @@ function init() {
 // //player clicks e2 and clicks e4
 
 // //check if square ahead is occupied
-// if (!board.squares[20].piece) console.log(`path clear for pawn on ${board.squares[12 + 8].file}${board.squares[12 + 8].rank} `)
+// if (!board.squares[20].piece) console.log(`path clear for pawn on ${ board.squares[12 + 8].file }${ board.squares[12 + 8].rank } `)
 // //check if destination square is occupied
-// if (!board.squares[28].piece) console.log(`path clear for pawn on ${board.squares[12 + 8 + 8].file}${board.squares[12 + 8 + 8].rank} `)
+// if (!board.squares[28].piece) console.log(`path clear for pawn on ${ board.squares[12 + 8 + 8].file }${ board.squares[12 + 8 + 8].rank } `)
 //move the pawn to e4
 // board.squares[28].piece = board.squares[12].piece
 
@@ -235,12 +271,12 @@ function init() {
 // consolePlay()
 
 // //check if pawn can advance forward
-// if (!board.squares[28 + 8].piece) console.log(`path clear for pawn on ${board.squares[28 + 8].file}${board.squares[28 + 8].rank} `)
+// if (!board.squares[28 + 8].piece) console.log(`path clear for pawn on ${ board.squares[28 + 8].file }${ board.squares[28 + 8].rank } `)
 
 // //check if pawn can capture
 
-// if (board.squares[28 + 7].piece) console.log(`Capture detected! ${board.squares[28 + 7].file}${board.squares[28 + 7].rank} `)
-// if (board.squares[28 + 9].piece) console.log(`Capture detected! ${board.squares[28 + 9].file}${board.squares[28 + 9].rank} `)
+// if (board.squares[28 + 7].piece) console.log(`Capture detected! ${ board.squares[28 + 7].file }${ board.squares[28 + 7].rank } `)
+// if (board.squares[28 + 9].piece) console.log(`Capture detected! ${ board.squares[28 + 9].file }${ board.squares[28 + 9].rank } `)
 
 // consolePlay()
 
