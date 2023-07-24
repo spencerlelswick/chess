@@ -8,7 +8,7 @@ class Board {
     this.squares = []
     //maybe make this static
     this.files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-    this.ranks = [1, 2, 3, 4, 5, 6, 7, 8]
+    this.ranks = [8, 7, 6, 5, 4, 3, 2, 1]
   }
   makeBoard() {
     let currColor = true
@@ -47,14 +47,17 @@ class Board {
   }
   domDrawBoard() {
     const boardEl = document.querySelector('.board')
-    this.squares.reverse().forEach(sq => {
+    boardEl.replaceChildren()
+    this.squares.forEach(sq => {
       const square = document.createElement("div");
+      // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : `${sq.file}${sq.rank}`);
       const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
       square.appendChild(pieceName)
       square.classList.add(sq.color === 'light' ? 'light-square' : 'dark-square')
       boardEl.appendChild(square)
       boardEl.classList.add()
     });
+    // boardEl.replaceChildren(domSquares)
   }
 
   //temp method to draw board in console.
@@ -292,36 +295,36 @@ init()
 
 //TODO: Refactor
 function populateBoard() {
-  board.squares[0].piece = new Rook('white')
-  board.squares[1].piece = new Knight('white')
-  board.squares[2].piece = new Bishop('white')
-  board.squares[3].piece = new King('white')
-  board.squares[4].piece = new Queen('white')
-  board.squares[5].piece = new Bishop('white')
-  board.squares[6].piece = new Knight('white')
-  board.squares[7].piece = new Rook('white')
-  board.squares[8].piece = new Pawn('white')
-  board.squares[9].piece = new Pawn('white')
-  board.squares[10].piece = new Pawn('white')
-  board.squares[11].piece = new Pawn('white')
-  board.squares[12].piece = new Pawn('white')
-  board.squares[13].piece = new Pawn('white')
-  board.squares[14].piece = new Pawn('white')
-  board.squares[15].piece = new Pawn('white')
-  board.squares[56].piece = new Rook('black')
-  board.squares[57].piece = new Knight('black')
-  board.squares[58].piece = new Bishop('black')
-  board.squares[59].piece = new King('black')
-  board.squares[60].piece = new Queen('black')
-  board.squares[61].piece = new Bishop('black')
-  board.squares[62].piece = new Knight('black')
-  board.squares[63].piece = new Rook('black')
-  board.squares[55].piece = new Pawn('black')
-  board.squares[54].piece = new Pawn('black')
-  board.squares[53].piece = new Pawn('black')
-  board.squares[52].piece = new Pawn('black')
-  board.squares[51].piece = new Pawn('black')
-  board.squares[50].piece = new Pawn('black')
-  board.squares[49].piece = new Pawn('black')
-  board.squares[48].piece = new Pawn('black')
+  board.squares[0].piece = new Rook('black')
+  board.squares[1].piece = new Knight('black')
+  board.squares[2].piece = new Bishop('black')
+  board.squares[3].piece = new Queen('black')
+  board.squares[4].piece = new King('black')
+  board.squares[5].piece = new Bishop('black')
+  board.squares[6].piece = new Knight('black')
+  board.squares[7].piece = new Rook('black')
+  board.squares[8].piece = new Pawn('black')
+  board.squares[9].piece = new Pawn('black')
+  board.squares[10].piece = new Pawn('black')
+  board.squares[11].piece = new Pawn('black')
+  board.squares[12].piece = new Pawn('black')
+  board.squares[13].piece = new Pawn('black')
+  board.squares[14].piece = new Pawn('black')
+  board.squares[15].piece = new Pawn('black')
+  board.squares[56].piece = new Rook('white')
+  board.squares[57].piece = new Knight('white')
+  board.squares[58].piece = new Bishop('white')
+  board.squares[59].piece = new Queen('white')
+  board.squares[60].piece = new King('white')
+  board.squares[61].piece = new Bishop('white')
+  board.squares[62].piece = new Knight('white')
+  board.squares[63].piece = new Rook('white')
+  board.squares[55].piece = new Pawn('white')
+  board.squares[54].piece = new Pawn('white')
+  board.squares[53].piece = new Pawn('white')
+  board.squares[52].piece = new Pawn('white')
+  board.squares[51].piece = new Pawn('white')
+  board.squares[50].piece = new Pawn('white')
+  board.squares[48].piece = new Pawn('white')
+  board.squares[49].piece = new Pawn('white')
 }
