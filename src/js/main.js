@@ -28,44 +28,36 @@ class Board {
     let dst = null
     let clickCount = 0
     boardEl.addEventListener('click', e => {
-      if (clickCount > 1 || clickCount < 0) {
-        clickCount = 0
+      console.log(`'clicked' ${clickCount}`)
+      clickCount++
+      if (!src && clickCount === 1) {
+        src = this.squares[this.squareIndex(e.target.id)]
+        if (!src.piece) {
+          src = null
+          dst = null
+          clickCount = 0
+        }
+      }
+      if (src && clickCount === 2) {
+        dst = this.squares[this.squareIndex(e.target.id)]
+        if (src.piece && dst) {
+          if (src.rank === dst.rank && src.file === dst.file) {
+            dst = null
+            console.log('Destination matched src square')
+          } else {
+            this.updatePieceSquare(src, dst)
+          }
+        }
+      }
+      if (clickCount > 1) {
         src = null
         dst = null
+        clickCount = 0
       }
-      clickCount++
-      console.log(`${src} source, ${clickCount} clickCount`)
-      if (!src && clickCount === 1) {
-        src = this.squares[this.sqaureIndex(e.target.id)]
-        if (this.squares[this.sqaureIndex(e.target.id)].piece === null) {
-          clickCount = 0
-          src = null
-          dst = null
-        } else {
-          console.log('setting src')
-
-          src = this.squares[this.sqaureIndex(e.target.id)]
-          console.log(`${src.file}${src.rank}`)
-        }
-      } else {
-        console.log('setting dst')
-        dst = this.squares[this.sqaureIndex(e.target.id)]
-        if (src === dst) {
-          clickCount = 0
-          src = null
-          dst = null
-        } else {
-          console.log(`${src.file}${src.rank} - ${dst.file}${dst.rank}`)
-          playerMove(src, dst)
-          this.updatePieceSquare(src, dst)
-        }
-      }
-      clickCount = 0
-    })
+    });
     boardEl.replaceChildren()
     this.squares.forEach(sq => {
       const square = document.createElement("div");
-      // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : `${ sq.file }${ sq.rank }`);
       const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
       square.appendChild(pieceName)
       square.setAttribute('id', `${sq.file}${sq.rank}`)
@@ -77,16 +69,14 @@ class Board {
   //takes a src,dst. Moves piece to dst, removes from src.
   updatePieceSquare(src, dst) {
     console.log(src.piece, dst)
-    let moveable = src.piece.move()
-    if (moveable) {
-      dst.piece = src.piece
-      //TODO: src.piece.move(src, dst) refactor to pass in. Piece should verify movement
-      src.piece = null
-    }
+    src.piece.move()
+    dst.piece = src.piece
+    //TODO: src.piece.move(src, dst) refactor to pass in. Piece should verify movement
+    src.piece = null
     board.drawBoard()
   }
   // takes a square a1-h8 and converts it to square index
-  sqaureIndex(square) {
+  squareIndex(square) {
     let file = square.slice(0, 1)
     let rank = parseInt(square.slice(1, 2))
     let sq = board.squares.filter(sq => sq.file === file).filter(sq => sq.rank === rank)
