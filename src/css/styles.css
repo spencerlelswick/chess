@@ -55,7 +55,6 @@ aside {
   width: 40px;
   height: 40px;
   background-color: rgb(243, 226, 206);
-  border: 1px black solid;
 }
 
 .dark-square {
@@ -63,5 +62,4 @@ aside {
   width: 40px;
   height: 40px;
   background-color: rgb(227, 172, 105);
-  border: 1px black solid;
 }
