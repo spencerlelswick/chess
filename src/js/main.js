@@ -118,7 +118,6 @@ class King extends Piece {
   }
 }
 
-
 class Queen extends Piece {
   constructor(color) {
     super(color)
@@ -139,7 +138,6 @@ class Rook extends Piece {
     console.log(`moving: ${this.name} to square`)
   }
 }
-
 
 class Bishop extends Piece {
   constructor(color) {
@@ -166,6 +164,8 @@ moveBtnEl.addEventListener('click', e => {
   console.log(src)
   let dst = sqaureIndex(destination)
   playerMove(src, dst)
+  updatePieceSquare(src, dst)
+  consolePlay()
 })
 
 function playerMove(src, dst) {
@@ -174,9 +174,17 @@ function playerMove(src, dst) {
   //check for checkmate
   //check for stalemate
   //check for draw
+  //check for piece on square
   //calculate movement
+  console.log(`moving ${src} to ${dst}`)
+  console.log(`moving ${board.squares[src].piece.name} to ${board.squares[dst].file}${board.squares[dst].rank}`)
+}
 
-
+//takes a src,dst. Moves piece to dst, removes from src.
+function updatePieceSquare(src, dst) {
+  board.squares[dst].piece = board.squares[src].piece
+  board.squares[src].piece.move(src, dst)
+  board.squares[src].piece = null
 }
 
 // takes a square a1-h8 and converts it to square index
@@ -190,13 +198,13 @@ function sqaureIndex(square) {
 
 
 function init() {
-
+  populateBoard()
   consolePlay()
 }
 
 function consolePlay() {
   board.drawBoard()
-  populateBoard()
+
   board.consoleDrawboard()
 }
 
@@ -204,43 +212,7 @@ const board = new Board()
 board.makeBoard()
 
 
-//TODO: Refactor
-function populateBoard() {
-  board.squares[0].piece = new Rook('white')
-  board.squares[1].piece = new Knight('white')
-  board.squares[2].piece = new Bishop('white')
-  board.squares[3].piece = new Queen('white')
-  board.squares[4].piece = new King('white')
-  board.squares[5].piece = new Bishop('white')
-  board.squares[6].piece = new Knight('white')
-  board.squares[7].piece = new Rook('white')
-  board.squares[8].piece = new Pawn('white')
-  board.squares[9].piece = new Pawn('white')
-  board.squares[10].piece = new Pawn('white')
-  board.squares[11].piece = new Pawn('white')
-  board.squares[12].piece = new Pawn('white')
-  board.squares[13].piece = new Pawn('white')
-  board.squares[14].piece = new Pawn('white')
-  board.squares[15].piece = new Pawn('white')
 
-
-  board.squares[56].piece = new Rook('black')
-  board.squares[57].piece = new Knight('black')
-  board.squares[58].piece = new Bishop('black')
-  board.squares[59].piece = new Queen('black')
-  board.squares[60].piece = new King('black')
-  board.squares[61].piece = new Bishop('black')
-  board.squares[62].piece = new Knight('black')
-  board.squares[63].piece = new Rook('black')
-  board.squares[55].piece = new Pawn('black')
-  board.squares[54].piece = new Pawn('black')
-  board.squares[53].piece = new Pawn('black')
-  board.squares[52].piece = new Pawn('black')
-  board.squares[51].piece = new Pawn('black')
-  board.squares[50].piece = new Pawn('black')
-  board.squares[49].piece = new Pawn('black')
-  board.squares[48].piece = new Pawn('black')
-}
 
 // // Console pawn test
 // //add piece to e2 (pawn)
@@ -300,3 +272,42 @@ function populateBoard() {
 // TODO: Make init function
 init()
 // 
+
+
+
+
+//TODO: Refactor
+function populateBoard() {
+  board.squares[0].piece = new Rook('white')
+  board.squares[1].piece = new Knight('white')
+  board.squares[2].piece = new Bishop('white')
+  board.squares[3].piece = new Queen('white')
+  board.squares[4].piece = new King('white')
+  board.squares[5].piece = new Bishop('white')
+  board.squares[6].piece = new Knight('white')
+  board.squares[7].piece = new Rook('white')
+  board.squares[8].piece = new Pawn('white')
+  board.squares[9].piece = new Pawn('white')
+  board.squares[10].piece = new Pawn('white')
+  board.squares[11].piece = new Pawn('white')
+  board.squares[12].piece = new Pawn('white')
+  board.squares[13].piece = new Pawn('white')
+  board.squares[14].piece = new Pawn('white')
+  board.squares[15].piece = new Pawn('white')
+  board.squares[56].piece = new Rook('black')
+  board.squares[57].piece = new Knight('black')
+  board.squares[58].piece = new Bishop('black')
+  board.squares[59].piece = new Queen('black')
+  board.squares[60].piece = new King('black')
+  board.squares[61].piece = new Bishop('black')
+  board.squares[62].piece = new Knight('black')
+  board.squares[63].piece = new Rook('black')
+  board.squares[55].piece = new Pawn('black')
+  board.squares[54].piece = new Pawn('black')
+  board.squares[53].piece = new Pawn('black')
+  board.squares[52].piece = new Pawn('black')
+  board.squares[51].piece = new Pawn('black')
+  board.squares[50].piece = new Pawn('black')
+  board.squares[49].piece = new Pawn('black')
+  board.squares[48].piece = new Pawn('black')
+}
