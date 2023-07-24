@@ -25,27 +25,19 @@ class Board {
     toggleColor ? 'dark' : 'light'
   }
   drawBoard() {
-    const boardRanks = [[]]
-    let currFile = 0
-    let count = 0
-    for (let square in this.squares) {
-
-      boardRanks[currFile].push(this.squares[square])
-      count++
-      if (count === this.files.length) {
-        currFile !== this.files.length ? boardRanks.push([]) : null
-        currFile++
-        count = 0
-      }
-    }
-    //TODO: Possible bug adding empty array at idx 0.
-    //TODO: Possible bug drawing board ranks in reverse order
-    boardRanks.reverse()
-
-    //temporary console.log board
-    return boardRanks;
-  }
-  domDrawBoard() {
+    let sourceInput = document.getElementById("source");
+    let destinationInput = document.getElementById("destination");
+    const moveBtnEl = document.querySelector('.submit-move')
+    moveBtnEl.addEventListener('click', e => {
+      e.preventDefault()
+      let source = sourceInput.value
+      let destination = destinationInput.value
+      let src = board.sqaureIndex(source)
+      console.log(src)
+      let dst = board.sqaureIndex(destination)
+      playerMove(src, dst)
+      this.updatePieceSquare(src, dst)
+    })
     const boardEl = document.querySelector('.board')
     boardEl.replaceChildren()
     this.squares.forEach(sq => {
@@ -57,26 +49,56 @@ class Board {
       boardEl.appendChild(square)
       boardEl.classList.add()
     });
-    // boardEl.replaceChildren(domSquares)
   }
 
-  //temp method to draw board in console.
-  consoleDrawBoard() {
-    let localRank = ''
-    const drawnBoard = []
-    const consoleBoard = this.drawBoard()
-    for (let i = 0; i < consoleBoard.length; i++) {
-      localRank = ''
-      for (let j = 0; j < consoleBoard[i].length; j++) {
-        let localSq = consoleBoard[i][j]
-        // localRank += `| ${localSq.rank}${localSq.file} `
-        // localSq.piece ? localRank += `|${localSq.piece.name} ` : localRank += `|${localSq.file}${localSq.rank}`
-        localSq.piece ? localRank += `|${localSq.piece.name} ` : localRank += `|__`
-      }
-      if (localRank) drawnBoard.push(localRank)
-
-    }
-    console.log(drawnBoard)
+  //takes a src,dst. Moves piece to dst, removes from src.
+  updatePieceSquare(src, dst) {
+    this.squares[dst].piece = board.squares[src].piece
+    this.squares[src].piece.move(src, dst)
+    this.squares[src].piece = null
+    board.drawBoard()
+  }
+  // takes a square a1-h8 and converts it to square index
+  sqaureIndex(square) {
+    let file = square.slice(0, 1)
+    let rank = parseInt(square.slice(1, 2))
+    let sq = board.squares.filter(sq => sq.file === file).filter(sq => sq.rank === rank)
+    let squareIndex = board.squares.findIndex(square => square === sq[0])
+    return squareIndex
+  }
+  populateBoard() {
+    this.squares[0].piece = new Rook('black')
+    this.squares[1].piece = new Knight('black')
+    this.squares[2].piece = new Bishop('black')
+    this.squares[3].piece = new Queen('black')
+    this.squares[4].piece = new King('black')
+    this.squares[5].piece = new Bishop('black')
+    this.squares[6].piece = new Knight('black')
+    this.squares[7].piece = new Rook('black')
+    this.squares[8].piece = new Pawn('black')
+    this.squares[9].piece = new Pawn('black')
+    this.squares[10].piece = new Pawn('black')
+    this.squares[11].piece = new Pawn('black')
+    this.squares[12].piece = new Pawn('black')
+    this.squares[13].piece = new Pawn('black')
+    this.squares[14].piece = new Pawn('black')
+    this.squares[15].piece = new Pawn('black')
+    this.squares[56].piece = new Rook('white')
+    this.squares[57].piece = new Knight('white')
+    this.squares[58].piece = new Bishop('white')
+    this.squares[59].piece = new Queen('white')
+    this.squares[60].piece = new King('white')
+    this.squares[61].piece = new Bishop('white')
+    this.squares[62].piece = new Knight('white')
+    this.squares[63].piece = new Rook('white')
+    this.squares[55].piece = new Pawn('white')
+    this.squares[54].piece = new Pawn('white')
+    this.squares[53].piece = new Pawn('white')
+    this.squares[52].piece = new Pawn('white')
+    this.squares[51].piece = new Pawn('white')
+    this.squares[50].piece = new Pawn('white')
+    this.squares[48].piece = new Pawn('white')
+    this.squares[49].piece = new Pawn('white')
   }
 }
 
@@ -167,23 +189,7 @@ class Bishop extends Piece {
   }
 }
 
-//DOM
-let sourceInput = document.getElementById("source");
-let destinationInput = document.getElementById("destination");
-let source
-let destination
-const moveBtnEl = document.querySelector('.submit-move')
-moveBtnEl.addEventListener('click', e => {
-  e.preventDefault()
-  source = sourceInput.value
-  destination = destinationInput.value
-  let src = sqaureIndex(source)
-  console.log(src)
-  let dst = sqaureIndex(destination)
-  playerMove(src, dst)
-  updatePieceSquare(src, dst)
-  consolePlay()
-})
+
 
 function playerMove(src, dst) {
   //check if player turn
@@ -197,48 +203,14 @@ function playerMove(src, dst) {
   console.log(`moving ${board.squares[src].piece.name} to ${board.squares[dst].file}${board.squares[dst].rank}`)
 }
 
-//takes a src,dst. Moves piece to dst, removes from src.
-function updatePieceSquare(src, dst) {
-  board.squares[dst].piece = board.squares[src].piece
-  board.squares[src].piece.move(src, dst)
-  board.squares[src].piece = null
-}
-
-// takes a square a1-h8 and converts it to square index
-function sqaureIndex(square) {
-  let file = square.slice(0, 1)
-  let rank = parseInt(square.slice(1, 2))
-  let sq = board.squares.filter(sq => sq.file === file).filter(sq => sq.rank === rank)
-  let squareIndex = board.squares.findIndex(square => square === sq[0])
-  return squareIndex
-}
-
 
 function init() {
-  populateBoard()
-  consolePlay()
-}
-
-function consolePlay() {
+  board.makeBoard()
+  board.populateBoard()
   board.drawBoard()
-  board.domDrawBoard()
-  board.consoleDrawBoard()
 }
 
-const board = new Board()
-board.makeBoard()
-
-
-
-
-// // Console pawn test
-// //add piece to e2 (pawn)
-// board.squares[12].piece = new Pawn('white')
-// board.squares[52].piece = new Knight('black')
-
-// //move pawn to e4! best by test.
-// consolePlay()
-
+/////////////////////////////////////////////////////////////////////////////////
 // //player clicks e2 and clicks e4
 
 // //check if square ahead is occupied
@@ -283,48 +255,6 @@ board.makeBoard()
 
 
 
-
-
-//////////////////////////////////////////////////////////
-// TODO: Make init function
+///////////////////////////////////////////////////////////////////
+const board = new Board()
 init()
-// 
-
-
-
-
-//TODO: Refactor
-function populateBoard() {
-  board.squares[0].piece = new Rook('black')
-  board.squares[1].piece = new Knight('black')
-  board.squares[2].piece = new Bishop('black')
-  board.squares[3].piece = new Queen('black')
-  board.squares[4].piece = new King('black')
-  board.squares[5].piece = new Bishop('black')
-  board.squares[6].piece = new Knight('black')
-  board.squares[7].piece = new Rook('black')
-  board.squares[8].piece = new Pawn('black')
-  board.squares[9].piece = new Pawn('black')
-  board.squares[10].piece = new Pawn('black')
-  board.squares[11].piece = new Pawn('black')
-  board.squares[12].piece = new Pawn('black')
-  board.squares[13].piece = new Pawn('black')
-  board.squares[14].piece = new Pawn('black')
-  board.squares[15].piece = new Pawn('black')
-  board.squares[56].piece = new Rook('white')
-  board.squares[57].piece = new Knight('white')
-  board.squares[58].piece = new Bishop('white')
-  board.squares[59].piece = new Queen('white')
-  board.squares[60].piece = new King('white')
-  board.squares[61].piece = new Bishop('white')
-  board.squares[62].piece = new Knight('white')
-  board.squares[63].piece = new Rook('white')
-  board.squares[55].piece = new Pawn('white')
-  board.squares[54].piece = new Pawn('white')
-  board.squares[53].piece = new Pawn('white')
-  board.squares[52].piece = new Pawn('white')
-  board.squares[51].piece = new Pawn('white')
-  board.squares[50].piece = new Pawn('white')
-  board.squares[48].piece = new Pawn('white')
-  board.squares[49].piece = new Pawn('white')
-}
