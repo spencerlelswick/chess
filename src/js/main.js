@@ -17,6 +17,8 @@ class Board {
         this.squares.push(new Square(file, rank, currColor))
         currColor = !currColor
       }
+      //toggle starting color of each rank
+      currColor = !currColor
     }
   }
   toggleSquareColor() {
@@ -43,8 +45,20 @@ class Board {
     //temporary console.log board
     return boardRanks;
   }
+  domDrawBoard() {
+    const boardEl = document.querySelector('.board')
+    this.squares.reverse().forEach(sq => {
+      const square = document.createElement("div");
+      const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
+      square.appendChild(pieceName)
+      square.classList.add(sq.color === 'light' ? 'light-square' : 'dark-square')
+      boardEl.appendChild(square)
+      boardEl.classList.add()
+    });
+  }
+
   //temp method to draw board in console.
-  consoleDrawboard() {
+  consoleDrawBoard() {
     let localRank = ''
     const drawnBoard = []
     const consoleBoard = this.drawBoard()
@@ -204,8 +218,8 @@ function init() {
 
 function consolePlay() {
   board.drawBoard()
-
-  board.consoleDrawboard()
+  board.domDrawBoard()
+  board.consoleDrawBoard()
 }
 
 const board = new Board()
@@ -281,8 +295,8 @@ function populateBoard() {
   board.squares[0].piece = new Rook('white')
   board.squares[1].piece = new Knight('white')
   board.squares[2].piece = new Bishop('white')
-  board.squares[3].piece = new Queen('white')
-  board.squares[4].piece = new King('white')
+  board.squares[3].piece = new King('white')
+  board.squares[4].piece = new Queen('white')
   board.squares[5].piece = new Bishop('white')
   board.squares[6].piece = new Knight('white')
   board.squares[7].piece = new Rook('white')
@@ -297,8 +311,8 @@ function populateBoard() {
   board.squares[56].piece = new Rook('black')
   board.squares[57].piece = new Knight('black')
   board.squares[58].piece = new Bishop('black')
-  board.squares[59].piece = new Queen('black')
-  board.squares[60].piece = new King('black')
+  board.squares[59].piece = new King('black')
+  board.squares[60].piece = new Queen('black')
   board.squares[61].piece = new Bishop('black')
   board.squares[62].piece = new Knight('black')
   board.squares[63].piece = new Rook('black')
