@@ -88,6 +88,15 @@ class Board {
     board.drawBoard()
   }
   // takes a square a1-h8 and converts it to square index
+
+  squareOccupied(square) {
+    let sq = board.squares[square]
+    return sq.piece ? true : false
+  }
+  //given a square, returns squares on that file.
+  squareFile = square => this.squares.filter(fileSqs => board.squares[square].file === fileSqs.file)
+  squareRank = square => this.squares.filter(rankSqs => board.squares[square].rank === rankSqs.rank)
+  //given a square, returns a square index
   squareIndex(square) {
     let file = square.slice(0, 1)
     let rank = parseInt(square.slice(1, 2))
@@ -95,20 +104,14 @@ class Board {
     let squareIndex = board.squares.findIndex(square => square === sq[0])
     return squareIndex
   }
-  squareOccupied(square) {
-    let sq = board.squares[square]
-    return sq.piece
-  }
-  //given a square, returns squares on that file.
-  squareFile(square) {
-    let sq = board.squares[square]
-    const fileIndexes = []
-    for (let rank in this.ranks) {
-      console.log(rank)
+  //given array of squares, returns their indexes
+  squaresIndexes(squares) {
+    const squaresIndexes = []
+    for (let sq of squares) {
+      squaresIndexes.push(this.squareIndex(`${sq.file}${sq.rank}`))
     }
-    // this.ranks = [8, 7, 6, 5, 4, 3, 2, 1]
 
-    console.log(fileIndexes)
+    return squaresIndexes
   }
   populateBoard() {
     this.squares[0].piece = new Rook('black')
@@ -253,15 +256,68 @@ class Rook extends Piece {
     this.image = color === 'white' ? 'assets/piece/wr.png' : 'assets/piece/br.png'
   }
   move(src, dst) {
-    console.log(src, dst)
-
     //get current rank
     // allowed to move on rank if not blocked
-    board.squareFile(src)
+    //for a given square index
+    //find all square indexes on the file
+    let possibleFile = board.squareFile(src)
+    let possibleRank = board.squareRank(src)
+    let possibleFileIdx = board.squaresIndexes(possibleFile)
+    let possibleRankIdx = board.squaresIndexes(possibleRank)
+    let possibleMoves = [...possibleFileIdx, ...possibleRankIdx]
+    let path = []
+    if (possibleFileIdx.includes(dst)) {
+      //check for piece between src and dst
+      if (src > dst) {
+        possibleMoves = possibleFileIdx.reverse()
+        //get path squares between src and dst
+        path = possibleFileIdx.filter(pathMove => {
+          return pathMove < src && pathMove > dst
+        })
+      } else {
+        path = possibleFileIdx.filter(pathMove => {
+          return pathMove < dst && pathMove > src
+        })
+      }
 
+      const pathClear = path.every(pathSq => {
+        console.log(board.squareOccupied(pathSq))
+        return !board.squareOccupied(pathSq)
+      })
 
+      if (pathClear) {
+        return true
+      }
+      console.log(pathClear)
+      console.log(src)
+      console.log(path)
+      console.log(dst)
+    }
+    if (possibleRankIdx.includes(dst)) {
+      //check for piece between src and dst
+      if (src > dst) {
+        possibleMoves = possibleRankIdx.reverse()
+        //get path squares between src and dst
+        path = possibleRankIdx.filter(pathMove => {
+          return pathMove < src && pathMove > dst
+        })
+      } else {
+        path = possibleRankIdx.filter(pathMove => {
+          return pathMove < dst && pathMove > src
+        })
+      }
 
-    return true;
+      const pathClear = path.every(pathSq => {
+        console.log(board.squareOccupied(pathSq))
+        return !board.squareOccupied(pathSq)
+      })
+
+      if (pathClear) {
+        return true
+      }
+    }
+
+    return false;
   }
 }
 
