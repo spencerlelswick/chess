@@ -57,8 +57,16 @@ class Board {
     boardEl.replaceChildren()
     this.squares.forEach(sq => {
       const square = document.createElement("div");
-      const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
-      square.appendChild(pieceName)
+      // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
+      // square.appendChild(pieceName)
+
+
+      if (sq.piece) {
+        const pieceImg = document.createElement('img')
+        sq.piece.type === 'pawn' ? pieceImg.classList.add('pawn') : pieceImg.classList.add('piece')
+        pieceImg.src = sq.piece.image
+        square.appendChild(pieceImg)
+      }
       square.setAttribute('id', `${sq.file}${sq.rank}`)
       square.classList.add(sq.color === 'light' ? 'light-square' : 'dark-square')
       boardEl.appendChild(square)
@@ -144,6 +152,7 @@ class Pawn extends Piece {
     super(color)
     this.type = 'pawn'
     this.name = color === 'white' ? 'P' : 'p'
+    this.image = color === 'white' ? 'assets/piece/wp.png' : 'assets/piece/bp.png'
     this.movementRange = 2
     this.moveDistance = color === 'white' ? -8 : 8
     this.possibleMoves = []
@@ -176,6 +185,8 @@ class Knight extends Piece {
     super(color)
     this.type = 'knight'
     this.name = color === 'white' ? 'N' : 'n'
+    this.image = color === 'white' ? 'assets/piece/wn.png' : 'assets/piece/bn.png'
+
   }
   move() {
     console.log(`moving: ${this.name} to square`)
@@ -189,6 +200,7 @@ class King extends Piece {
     super(color)
     this.type = 'king'
     this.name = color === 'white' ? 'K' : 'k'
+    this.image = color === 'white' ? 'assets/piece/wk.png' : 'assets/piece/bk.png'
   }
   move() {
     console.log(`moving: ${this.name} to square`)
@@ -202,6 +214,7 @@ class Queen extends Piece {
     super(color)
     this.type = 'queen'
     this.name = color === 'white' ? 'Q' : 'q'
+    this.image = color === 'white' ? 'assets/piece/wq.png' : 'assets/piece/bq.png'
   }
   move() {
     console.log(`moving: ${this.name} to square`)
@@ -215,6 +228,8 @@ class Rook extends Piece {
     super(color)
     this.type = 'rook'
     this.name = color === 'white' ? 'R' : 'r'
+    this.image = color === 'white' ? 'assets/piece/wr.png' : 'assets/piece/br.png'
+
   }
   move() {
     console.log(`moving: ${this.name} to square`)
@@ -228,6 +243,7 @@ class Bishop extends Piece {
     super(color)
     this.type = 'bishop'
     this.name = color === 'white' ? 'B' : 'b'
+    this.image = color === 'white' ? 'assets/piece/wb.png' : 'assets/piece/bb.png'
   }
   move() {
     console.log(`moving: ${this.name} to square`)
