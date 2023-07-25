@@ -158,9 +158,6 @@ class Pawn extends Piece {
     this.possibleMoves = []
   }
   move(src, dst) {
-    console.log(src)
-    console.log(dst)
-
     //check if dst is occupied
     //check if path is occupied
 
@@ -176,6 +173,17 @@ class Pawn extends Piece {
       }
       return true
     }
+
+    if (src + this.moveDistance + 1 === dst || src + this.moveDistance - 1 === dst) {
+      if (board.squareOccupied(dst)) {
+        console.log(`square is occupied`)
+        return true
+      }
+      console.log(`square is not occupied`)
+      return false
+    }
+
+
     return false
   }
 }
