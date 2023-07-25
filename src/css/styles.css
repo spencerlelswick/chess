@@ -9,7 +9,7 @@ header {}
 
 main {
   background-color: rgb(90, 90, 90);
-
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -67,5 +67,12 @@ aside {
 .piece {
   width: 85%;
   height: 85%;
+  pointer-events: none;
+}
+
+.squareLabel span {
+  font-size: 30px;
+  color: rgba(255, 0, 0, 0.274);
+  position: absolute;
   pointer-events: none;
 }

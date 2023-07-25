@@ -59,8 +59,11 @@ class Board {
       const square = document.createElement("div");
       // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
       // square.appendChild(pieceName)
-
-
+      const squareLabel = document.createElement('span');
+      squareLabel.innerText = `${sq.file}${sq.rank}`
+      square.appendChild(squareLabel);
+      square.classList.add('squareLabel')
+      square.appendChild(squareLabel)
       if (sq.piece) {
         const pieceImg = document.createElement('img')
         sq.piece.type === 'pawn' ? pieceImg.classList.add('pawn') : pieceImg.classList.add('piece')
@@ -95,6 +98,17 @@ class Board {
   squareOccupied(square) {
     let sq = board.squares[square]
     return sq.piece
+  }
+  //given a square, returns squares on that file.
+  squareFile(square) {
+    let sq = board.squares[square]
+    const fileIndexes = []
+    for (let rank in this.ranks) {
+      console.log(rank)
+    }
+    // this.ranks = [8, 7, 6, 5, 4, 3, 2, 1]
+
+    console.log(fileIndexes)
   }
   populateBoard() {
     this.squares[0].piece = new Rook('black')
@@ -160,7 +174,6 @@ class Pawn extends Piece {
   move(src, dst) {
     //check if dst is occupied
     //check if path is occupied
-
     if (this.movementRange === 2 && src + this.moveDistance * this.movementRange === dst) {
       this.movementRange = 1
       return true
@@ -177,7 +190,8 @@ class Pawn extends Piece {
     if (src + this.moveDistance + 1 === dst || src + this.moveDistance - 1 === dst) {
       if (board.squareOccupied(dst)) {
         console.log(`square is occupied`)
-        return true
+        if (board.squares[src].piece.color !== board.squares[dst].piece.color)
+          return true
       }
       console.log(`square is not occupied`)
       return false
@@ -237,12 +251,17 @@ class Rook extends Piece {
     this.type = 'rook'
     this.name = color === 'white' ? 'R' : 'r'
     this.image = color === 'white' ? 'assets/piece/wr.png' : 'assets/piece/br.png'
-
   }
-  move() {
-    console.log(`moving: ${this.name} to square`)
-    return true;
+  move(src, dst) {
+    console.log(src, dst)
 
+    //get current rank
+    // allowed to move on rank if not blocked
+    board.squareFile(src)
+
+
+
+    return true;
   }
 }
 
@@ -253,10 +272,11 @@ class Bishop extends Piece {
     this.name = color === 'white' ? 'B' : 'b'
     this.image = color === 'white' ? 'assets/piece/wb.png' : 'assets/piece/bb.png'
   }
-  move() {
-    console.log(`moving: ${this.name} to square`)
-    return true;
-
+  move(src, dst) {
+    //check if dst is occupied
+    //check if path is occupied
+    console.log(src, dst)
+    return true
   }
 }
 
