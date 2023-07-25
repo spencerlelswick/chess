@@ -281,17 +281,17 @@ class Rook extends Piece {
       }
 
       const pathClear = path.every(pathSq => {
-        console.log(board.squareOccupied(pathSq))
+        // console.log(board.squareOccupied(pathSq))
         return !board.squareOccupied(pathSq)
       })
 
       if (pathClear) {
         return true
       }
-      console.log(pathClear)
-      console.log(src)
-      console.log(path)
-      console.log(dst)
+      // console.log(pathClear)
+      // console.log(src)
+      // console.log(path)
+      // console.log(dst)
     }
     if (possibleRankIdx.includes(dst)) {
       //check for piece between src and dst
