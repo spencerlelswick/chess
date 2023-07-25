@@ -84,6 +84,10 @@ class Board {
     let squareIndex = board.squares.findIndex(square => square === sq[0])
     return squareIndex
   }
+  squareOccupied(square) {
+    let sq = board.squares[square]
+    return sq.piece
+  }
   populateBoard() {
     this.squares[0].piece = new Rook('black')
     this.squares[1].piece = new Knight('black')
@@ -151,13 +155,18 @@ class Pawn extends Piece {
     //check if dst is occupied
     //check if path is occupied
 
-    if (src + this.moveDistance === dst) {
-      //moving a pawn restricts its range to 1 for rest of game.
-      console.log('pawn moved!')
+    if (this.movementRange === 2 && src + this.moveDistance * this.movementRange === dst) {
       this.movementRange = 1
-      return true;
+      return true
     }
-
+    if (src + this.moveDistance === dst) {
+      this.movementRange = 1
+      if (board.squareOccupied(dst)) {
+        console.log(`square is occupied`)
+        return false
+      }
+      return true
+    }
     return false
   }
 }
