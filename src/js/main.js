@@ -213,10 +213,24 @@ class Knight extends Piece {
     this.image = color === 'white' ? 'assets/piece/wn.png' : 'assets/piece/bn.png'
 
   }
-  move() {
-    console.log(`moving: ${this.name} to square`)
-    return true;
+  move(src, dst) {
+    //knight moves in L shapes
+    //which is always a variation of +/-(1 or 2)x(1 or 2)y
+    //this translates to the following static values in all cases
+    let possibleMoves = [-17, -15, -10, -6, 6, 10, 15, 17]
+    if (src < dst) {
+      if (possibleMoves.includes(dst - src)) {
+        return true
+      }
+    } else {
+      if (possibleMoves.includes(src - dst)) {
+        return true
+      }
+    }
 
+
+
+    return false;
   }
 }
 
