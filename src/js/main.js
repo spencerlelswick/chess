@@ -448,7 +448,6 @@ class Bishop extends Piece {
     let movable = false
 
     //convert possible diagonal squares XY to square indexes
-
     let possibleDiagsIdx = []
     possibleDiags.forEach(possible => {
       possibleDiagsIdx.push(board.diagonalIndexes(possible))
@@ -461,20 +460,18 @@ class Bishop extends Piece {
 
         //check for piece between src and dst
         if (src > dst) {
-          possibleMoves = possibleDiagsIdx.reverse()
           //get path squares between src and dst
-          path = possibleDiagsIdx.filter(pathMove => {
+          path = diagsIdx.filter(pathMove => {
+            console.log(pathMove)
             return pathMove < src && pathMove > dst
           })
         } else {
-          path = possibleDiagsIdx.filter(pathMove => {
+          path = diagsIdx.filter(pathMove => {
             return pathMove < dst && pathMove > src
           })
         }
-
-        // return true
+        console.log(path)
         const pathClear = path.every(pathSq => {
-          console.log(board.squareOccupied(pathSq))
           return !board.squareOccupied(pathSq)
         })
 
@@ -484,7 +481,6 @@ class Bishop extends Piece {
       }
 
     })
-    console.log('false')
     return movable
   }
 }
