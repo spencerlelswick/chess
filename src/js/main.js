@@ -316,16 +316,26 @@ class Knight extends Piece {
     let possibleMoves = [-17, -15, -10, -6, 6, 10, 15, 17]
     if (src < dst) {
       if (possibleMoves.includes(dst - src)) {
-        return true
+        if (board.squareOccupied(dst)) {
+          console.log('occupied')
+          return board.squares[src].piece.color !== board.squares[dst].piece.color
+        } else {
+          return true
+        }
       }
     } else {
       if (possibleMoves.includes(src - dst)) {
-        return true
+        if (board.squareOccupied(dst)) {
+          console.log(`${board.squares[src].piece.color}`)
+          console.log(`${board.squares[dst].piece.color}`)
+          return board.squares[src].piece.color !== board.squares[dst].piece.color
+        } else {
+          return true
+        }
       }
     }
 
-
-
+    // if (board.squares[src].piece.color !== board.squares[dst].piece.color)
     return false;
   }
 }
@@ -362,7 +372,7 @@ class Queen extends Piece {
     let movable = false
 
     console.log(`src: ${src} | dst: ${dst}`)
-    
+
     //convert possible diagonal squares XY to square indexes
     let possibleDiagsIdx = []
     if (possibleFileIdx.includes(dst)) {
@@ -385,12 +395,14 @@ class Queen extends Piece {
       })
 
       if (pathClear) {
-        return true
+        if (board.squareOccupied(dst)) {
+          console.log('occupied')
+          return board.squares[src].piece.color !== board.squares[dst].piece.color
+        } else {
+          return true
+        }
       }
-      // console.log(pathClear)
-      // console.log(src)
-      // console.log(path)
-      // console.log(dst)
+
     }
     if (possibleRankIdx.includes(dst)) {
       //check for piece between src and dst
@@ -412,11 +424,16 @@ class Queen extends Piece {
       })
 
       if (pathClear) {
-        return true
+        if (board.squareOccupied(dst)) {
+          console.log('occupied')
+          return board.squares[src].piece.color !== board.squares[dst].piece.color
+        } else {
+          return true
+        }
       }
     }
 
-    
+
     possibleDiags.forEach(possible => {
       possibleDiagsIdx.push(board.diagonalIndexes(possible))
     })
@@ -444,7 +461,12 @@ class Queen extends Piece {
         })
 
         if (pathClear) {
-          movable = true
+          if (board.squareOccupied(dst)) {
+            console.log('occupied')
+            return board.squares[src].piece.color !== board.squares[dst].piece.color
+          } else {
+            movable = true
+          }
         }
       }
 
@@ -486,12 +508,17 @@ class Rook extends Piece {
       }
 
       const pathClear = path.every(pathSq => {
-        // console.log(board.squareOccupied(pathSq))
         return !board.squareOccupied(pathSq)
       })
+      console.log(pathClear)
 
       if (pathClear) {
-        return true
+        if (board.squareOccupied(dst)) {
+          console.log('occupied')
+          return board.squares[src].piece.color !== board.squares[dst].piece.color
+        } else {
+          return true
+        }
       }
       // console.log(pathClear)
       // console.log(src)
@@ -518,7 +545,12 @@ class Rook extends Piece {
       })
 
       if (pathClear) {
-        return true
+        if (board.squareOccupied(dst)) {
+          console.log('occupied')
+          return board.squares[src].piece.color !== board.squares[dst].piece.color
+        } else {
+          return true
+        }
       }
     }
 
@@ -571,7 +603,12 @@ class Bishop extends Piece {
         })
 
         if (pathClear) {
-          movable = true
+          if (board.squareOccupied(dst)) {
+            console.log('occupied')
+            return board.squares[src].piece.color !== board.squares[dst].piece.color
+          } else {
+            return true
+          }
         }
       }
 
