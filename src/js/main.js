@@ -8,6 +8,9 @@ class Board {
     this.files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     this.ranks = [8, 7, 6, 5, 4, 3, 2, 1]
     this.diagonals = []
+    this.isCheck = false
+    this.isCheckmate = false
+    this.whiteTurn = true
   }
   makeBoard() {
     let currColor = true
@@ -81,12 +84,21 @@ class Board {
   updatePieceSquare(src, dst) {
     let srcIdx = this.squareIndex(`${src.file}${src.rank}`)
     let dstIdx = this.squareIndex(`${dst.file}${dst.rank}`)
+    let colorTurn = this.whiteTurn ? 'white' : 'black'
 
-    if (src.piece.move(srcIdx, dstIdx)) {
-      dst.piece = src.piece
-      src.piece = null
+    if (src.piece.color === colorTurn) {
+      if (src.piece.move(srcIdx, dstIdx)) {
+        dst.piece = src.piece
+        src.piece = null
+      }
+      board.drawBoard()
+      this.whiteTurn = !colorTurn
+      console.log(this.whiteTurn)
+    } else {
+      console.log(`it is ${colorTurn} to move.`)
     }
-    board.drawBoard()
+
+
   }
   // takes a square a1-h8 and converts it to square index
 
@@ -653,6 +665,7 @@ function playerMove(src, dst) {
   //check for piece on square
   //calculate movement
 }
+
 
 function init() {
   board.makeBoard()
