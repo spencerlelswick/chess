@@ -351,10 +351,105 @@ class Queen extends Piece {
     this.name = color === 'white' ? 'Q' : 'q'
     this.image = color === 'white' ? 'assets/piece/wq.png' : 'assets/piece/bq.png'
   }
-  move() {
-    console.log(`moving: ${this.name} to square`)
-    return true;
+  move(src, dst) {
+    let possibleFile = board.squareFile(src)
+    let possibleRank = board.squareRank(src)
+    let possibleFileIdx = board.squaresIndexes(possibleFile)
+    let possibleRankIdx = board.squaresIndexes(possibleRank)
+    let possibleMoves = [...possibleFileIdx, ...possibleRankIdx]
+    let path = []
+    let possibleDiags = board.squareDiagonal(src)
+    let movable = false
 
+    console.log(`src: ${src} | dst: ${dst}`)
+    
+    //convert possible diagonal squares XY to square indexes
+    let possibleDiagsIdx = []
+    if (possibleFileIdx.includes(dst)) {
+      //check for piece between src and dst
+      if (src > dst) {
+        possibleMoves = possibleFileIdx.reverse()
+        //get path squares between src and dst
+        path = possibleFileIdx.filter(pathMove => {
+          return pathMove < src && pathMove > dst
+        })
+      } else {
+        path = possibleFileIdx.filter(pathMove => {
+          return pathMove < dst && pathMove > src
+        })
+      }
+
+      const pathClear = path.every(pathSq => {
+        // console.log(board.squareOccupied(pathSq))
+        return !board.squareOccupied(pathSq)
+      })
+
+      if (pathClear) {
+        return true
+      }
+      // console.log(pathClear)
+      // console.log(src)
+      // console.log(path)
+      // console.log(dst)
+    }
+    if (possibleRankIdx.includes(dst)) {
+      //check for piece between src and dst
+      if (src > dst) {
+        possibleMoves = possibleRankIdx.reverse()
+        //get path squares between src and dst
+        path = possibleRankIdx.filter(pathMove => {
+          return pathMove < src && pathMove > dst
+        })
+      } else {
+        path = possibleRankIdx.filter(pathMove => {
+          return pathMove < dst && pathMove > src
+        })
+      }
+
+      const pathClear = path.every(pathSq => {
+        console.log(board.squareOccupied(pathSq))
+        return !board.squareOccupied(pathSq)
+      })
+
+      if (pathClear) {
+        return true
+      }
+    }
+
+    
+    possibleDiags.forEach(possible => {
+      possibleDiagsIdx.push(board.diagonalIndexes(possible))
+    })
+    possibleDiagsIdx.forEach(diagsIdx => {
+
+      let path = []
+      if (diagsIdx.includes(dst)) {
+        console.log(diagsIdx.includes(dst))
+
+        //check for piece between src and dst
+        if (src > dst) {
+          //get path squares between src and dst
+          path = diagsIdx.filter(pathMove => {
+            console.log(pathMove)
+            return pathMove < src && pathMove > dst
+          })
+        } else {
+          path = diagsIdx.filter(pathMove => {
+            return pathMove < dst && pathMove > src
+          })
+        }
+        console.log(path)
+        const pathClear = path.every(pathSq => {
+          return !board.squareOccupied(pathSq)
+        })
+
+        if (pathClear) {
+          movable = true
+        }
+      }
+
+    })
+    return movable
   }
 }
 
