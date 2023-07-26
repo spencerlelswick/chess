@@ -90,9 +90,9 @@ class Board {
       if (src.piece.move(srcIdx, dstIdx)) {
         dst.piece = src.piece
         src.piece = null
+        this.whiteTurn = !this.whiteTurn
       }
       board.drawBoard()
-      this.whiteTurn = !colorTurn
       console.log(this.whiteTurn)
     } else {
       console.log(`it is ${colorTurn} to move.`)
@@ -105,6 +105,9 @@ class Board {
   squareOccupied(square) {
     let sq = board.squares[square]
     return sq.piece ? true : false
+  }
+  squareAttacked(square) {
+
   }
   //given a square, returns squares on that file.
   squareFile = square => this.squares.filter(fileSqs => board.squares[square].file === fileSqs.file)
@@ -393,19 +396,28 @@ class King extends Piece {
         //check for piece between src and dst
         if (src > dst) {
           possibleMoves = diagsIdx
-          console.log(possibleMoves)
           kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
+          kingMoves.push(possibleMoves[possibleMoves.indexOf(src) - 1])
+
         } else {
           possibleMoves = diagsIdx.reverse()
-          console.log(possibleMoves)
+
           kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
+          kingMoves.push(possibleMoves[possibleMoves.indexOf(src) - 1])
+
+
         }
       }
     })
 
     if (kingMoves.includes(dst)) {
+      console.log(kingMoves)
+      console.log(kingMoves.includes(dst))
       if (board.squareOccupied(dst)) {
         movable = board.squares[src].piece.color !== board.squares[dst].piece.color
+        console.log(board.squares[src].piece.color)
+        console.log(board.squares[dst].piece.color)
+        console.log(movable)
       } else {
         movable = true
       }
@@ -454,6 +466,7 @@ class Queen extends Piece {
 
       if (pathClear) {
         if (board.squareOccupied(dst)) {
+          console.log(board.squareOccupied(dst))
           return board.squares[src].piece.color !== board.squares[dst].piece.color
         } else {
           return true
