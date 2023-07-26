@@ -103,8 +103,6 @@ class Board {
     //loop through each diagonal array
     //return all diagonals that contain file/rank of square
 
-    console.log(`${this.squares[square].file}${this.squares[square].rank}`)
-
     const matchingDiags = this.diagonals.filter(diag => {
       return diag.includes(`${this.squares[square].file}${this.squares[square].rank}`)
     })
@@ -287,11 +285,9 @@ class Pawn extends Piece {
 
     if (src + this.moveDistance + 1 === dst || src + this.moveDistance - 1 === dst) {
       if (board.squareOccupied(dst)) {
-        console.log(`square is occupied`)
         if (board.squares[src].piece.color !== board.squares[dst].piece.color)
           return true
       }
-      console.log(`square is not occupied`)
       return false
     }
 
@@ -316,7 +312,6 @@ class Knight extends Piece {
     if (src < dst) {
       if (possibleMoves.includes(dst - src)) {
         if (board.squareOccupied(dst)) {
-          console.log('occupied')
           return board.squares[src].piece.color !== board.squares[dst].piece.color
         } else {
           return true
@@ -325,8 +320,6 @@ class Knight extends Piece {
     } else {
       if (possibleMoves.includes(src - dst)) {
         if (board.squareOccupied(dst)) {
-          console.log(`${board.squares[src].piece.color}`)
-          console.log(`${board.squares[dst].piece.color}`)
           return board.squares[src].piece.color !== board.squares[dst].piece.color
         } else {
           return true
@@ -334,7 +327,6 @@ class Knight extends Piece {
       }
     }
 
-    // if (board.squares[src].piece.color !== board.squares[dst].piece.color)
     return false;
   }
 }
@@ -345,12 +337,71 @@ class King extends Piece {
     this.type = 'king'
     this.name = color === 'white' ? 'K' : 'k'
     this.image = color === 'white' ? 'assets/piece/wk.png' : 'assets/piece/bk.png'
+    this.hasMoved = false
   }
-  move() {
-    console.log(`moving: ${this.name} to square`)
-    return true;
+  move(src, dst) {
+    let possibleFile = board.squareFile(src)
+    let possibleRank = board.squareRank(src)
+    let possibleFileIdx = board.squaresIndexes(possibleFile)
+    let possibleRankIdx = board.squaresIndexes(possibleRank)
+    let possibleMoves = [...possibleFileIdx, ...possibleRankIdx]
+    let path = []
+    let kingMoves = []
+    let possibleDiags = board.squareDiagonal(src)
+    let movable = false
+
+    //convert possible diagonal squares XY to square indexes
+    let possibleDiagsIdx = []
+
+    if (possibleFileIdx.includes(dst)) {
+      if (src > dst) {
+        possibleMoves = possibleFileIdx.reverse()
+        kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
+      } else {
+        possibleMoves = possibleFileIdx
+        kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
+      }
+    }
+
+    if (possibleRankIdx.includes(dst)) {
+      if (src > dst) {
+        possibleMoves = possibleRankIdx.reverse()
+        kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
+      } else {
+        possibleMoves = possibleRankIdx
+        kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
+      }
+    }
+
+    possibleDiags.forEach(possible => {
+      possibleDiagsIdx.push(board.diagonalIndexes(possible))
+    })
+    possibleDiagsIdx.forEach(diagsIdx => {
+      if (diagsIdx.includes(dst)) {
+        //check for piece between src and dst
+        if (src > dst) {
+          possibleMoves = diagsIdx
+          console.log(possibleMoves)
+          kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
+        } else {
+          possibleMoves = diagsIdx.reverse()
+          console.log(possibleMoves)
+          kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
+        }
+      }
+    })
+
+    if (kingMoves.includes(dst)) {
+      if (board.squareOccupied(dst)) {
+        movable = board.squares[src].piece.color !== board.squares[dst].piece.color
+      } else {
+        movable = true
+      }
+    }
+    return movable
   }
 }
+
 
 class Queen extends Piece {
   constructor(color) {
@@ -358,8 +409,7 @@ class Queen extends Piece {
     this.type = 'queen'
     this.name = color === 'white' ? 'Q' : 'q'
     this.image = color === 'white' ? 'assets/piece/wq.png' : 'assets/piece/bq.png'
-  }
-  move(src, dst) {
+  } move(src, dst) {
     let possibleFile = board.squareFile(src)
     let possibleRank = board.squareRank(src)
     let possibleFileIdx = board.squaresIndexes(possibleFile)
@@ -369,7 +419,6 @@ class Queen extends Piece {
     let possibleDiags = board.squareDiagonal(src)
     let movable = false
 
-    console.log(`src: ${src} | dst: ${dst}`)
 
     //convert possible diagonal squares XY to square indexes
     let possibleDiagsIdx = []
@@ -388,13 +437,11 @@ class Queen extends Piece {
       }
 
       const pathClear = path.every(pathSq => {
-        // console.log(board.squareOccupied(pathSq))
         return !board.squareOccupied(pathSq)
       })
 
       if (pathClear) {
         if (board.squareOccupied(dst)) {
-          console.log('occupied')
           return board.squares[src].piece.color !== board.squares[dst].piece.color
         } else {
           return true
@@ -416,13 +463,11 @@ class Queen extends Piece {
       }
 
       const pathClear = path.every(pathSq => {
-        console.log(board.squareOccupied(pathSq))
         return !board.squareOccupied(pathSq)
       })
 
       if (pathClear) {
         if (board.squareOccupied(dst)) {
-          console.log('occupied')
           return board.squares[src].piece.color !== board.squares[dst].piece.color
         } else {
           return true
@@ -438,13 +483,11 @@ class Queen extends Piece {
 
       let path = []
       if (diagsIdx.includes(dst)) {
-        console.log(diagsIdx.includes(dst))
 
         //check for piece between src and dst
         if (src > dst) {
           //get path squares between src and dst
           path = diagsIdx.filter(pathMove => {
-            console.log(pathMove)
             return pathMove < src && pathMove > dst
           })
         } else {
@@ -452,14 +495,12 @@ class Queen extends Piece {
             return pathMove < dst && pathMove > src
           })
         }
-        console.log(path)
         const pathClear = path.every(pathSq => {
           return !board.squareOccupied(pathSq)
         })
 
         if (pathClear) {
           if (board.squareOccupied(dst)) {
-            console.log('occupied')
             return board.squares[src].piece.color !== board.squares[dst].piece.color
           } else {
             movable = true
@@ -478,6 +519,7 @@ class Rook extends Piece {
     this.type = 'rook'
     this.name = color === 'white' ? 'R' : 'r'
     this.image = color === 'white' ? 'assets/piece/wr.png' : 'assets/piece/br.png'
+    this.hasMoved = false
   }
   move(src, dst) {
     //get current rank
@@ -507,20 +549,15 @@ class Rook extends Piece {
       const pathClear = path.every(pathSq => {
         return !board.squareOccupied(pathSq)
       })
-      console.log(pathClear)
 
       if (pathClear) {
         if (board.squareOccupied(dst)) {
-          console.log('occupied')
           return board.squares[src].piece.color !== board.squares[dst].piece.color
         } else {
           return true
         }
       }
-      // console.log(pathClear)
-      // console.log(src)
-      // console.log(path)
-      // console.log(dst)
+
     }
     if (possibleRankIdx.includes(dst)) {
       //check for piece between src and dst
@@ -537,13 +574,11 @@ class Rook extends Piece {
       }
 
       const pathClear = path.every(pathSq => {
-        console.log(board.squareOccupied(pathSq))
         return !board.squareOccupied(pathSq)
       })
 
       if (pathClear) {
         if (board.squareOccupied(dst)) {
-          console.log('occupied')
           return board.squares[src].piece.color !== board.squares[dst].piece.color
         } else {
           return true
@@ -565,7 +600,6 @@ class Bishop extends Piece {
   move(src, dst) {
     //check if dst is occupied
     //check if path is occupied
-    console.log(`src: ${src} | dst: ${dst}`)
     //get diagonal from board
     let possibleDiags = board.squareDiagonal(src)
     let possibleMoves = []
@@ -580,13 +614,11 @@ class Bishop extends Piece {
 
       let path = []
       if (diagsIdx.includes(dst)) {
-        console.log(diagsIdx.includes(dst))
 
         //check for piece between src and dst
         if (src > dst) {
           //get path squares between src and dst
           path = diagsIdx.filter(pathMove => {
-            console.log(pathMove)
             return pathMove < src && pathMove > dst
           })
         } else {
@@ -594,14 +626,12 @@ class Bishop extends Piece {
             return pathMove < dst && pathMove > src
           })
         }
-        console.log(path)
         const pathClear = path.every(pathSq => {
           return !board.squareOccupied(pathSq)
         })
 
         if (pathClear) {
           if (board.squareOccupied(dst)) {
-            console.log('occupied')
             movable = board.squares[src].piece.color !== board.squares[dst].piece.color
           } else {
             movable = true
@@ -631,51 +661,5 @@ function init() {
   board.drawBoard()
 }
 
-/////////////////////////////////////////////////////////////////////////////////
-// //player clicks e2 and clicks e4
-
-// //check if square ahead is occupied
-// if (!board.squares[20].piece) console.log(`path clear for pawn on ${ board.squares[12 + 8].file }${ board.squares[12 + 8].rank } `)
-// //check if destination square is occupied
-// if (!board.squares[28].piece) console.log(`path clear for pawn on ${ board.squares[12 + 8 + 8].file }${ board.squares[12 + 8 + 8].rank } `)
-//move the pawn to e4
-// board.squares[28].piece = board.squares[12].piece
-
-// //set pawn hasMoved() to true, limiting is movement range to 1 square.
-// board.squares[12].piece.move()
-
-// //remove the pawn from e2
-// board.squares[12].piece = null
-// consolePlay()
-
-
-// //knights can move to any square without being blocked
-// board.squares[37].piece = board.squares[52].piece
-// board.squares[52].piece.move()
-// board.squares[52].piece = null
-
-// consolePlay()
-
-// //check if pawn can advance forward
-// if (!board.squares[28 + 8].piece) console.log(`path clear for pawn on ${ board.squares[28 + 8].file }${ board.squares[28 + 8].rank } `)
-
-// //check if pawn can capture
-
-// if (board.squares[28 + 7].piece) console.log(`Capture detected! ${ board.squares[28 + 7].file }${ board.squares[28 + 7].rank } `)
-// if (board.squares[28 + 9].piece) console.log(`Capture detected! ${ board.squares[28 + 9].file }${ board.squares[28 + 9].rank } `)
-
-// consolePlay()
-
-// //if capture is detected, the move is legal
-// board.squares[37].piece = board.squares[28].piece
-// board.squares[28].piece = null
-// console.log('Pawn captures Knight on f5')
-// consolePlay()
-
-
-
-
-
-///////////////////////////////////////////////////////////////////
 const board = new Board()
 init()
