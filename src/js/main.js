@@ -103,11 +103,13 @@ class Board {
     //loop through each diagonal array
     //return all diagonals that contain file/rank of square
 
-    console.log(`${this.squares[square]}`)
+    console.log(`${this.squares[square].file}${this.squares[square].rank}`)
 
-    // this.squares.filter(diagSqs => {
-    //   return board.squares[square].rank === `${diagSqs.file}${diagSqs.rank}`
-    // })
+    const matchingDiags = this.diagonals.filter(diag => {
+      return diag.includes(`${this.squares[square].file}${this.squares[square].rank}`)
+    })
+
+    return matchingDiags
   }
   //computes squares possible diagonals.
   populateDiagonals() {
@@ -129,7 +131,6 @@ class Board {
       for (let i = s; i < this.squares.length; i += 9) {
         if (limitReached) break
         if (filesLimitHigh === this.squares[i].file || ranksLimitHigh === this.squares[i].rank) {
-          console.log(`Hit ${filesLimitHigh} ${this.squares[i].file} OR ${ranksLimitHigh} ${this.squares[i].rank}`)
           blackRightDiagonals[s].push(`${this.squares[i].file}${this.squares[i].rank}`)
           limitReached = true
         } else {
@@ -139,12 +140,10 @@ class Board {
     }
 
     for (let r = 7; r > 0; r--) {
-      console.log(r)
       let limitReached = false
       for (let i = r; i < this.squares.length; i += 7) {
         if (limitReached) break
         if (filesLimitLow === this.squares[i].file || ranksLimitHigh === this.squares[i].rank) {
-          console.log(`Hit ${filesLimitHigh} ${this.squares[i].file} OR ${ranksLimitHigh} ${this.squares[i].rank}`)
           blackLeftDiagonals[r].push(`${this.squares[i].file}${this.squares[i].rank}`)
           limitReached = true
         } else {
@@ -199,6 +198,14 @@ class Board {
     const squaresIndexes = []
     for (let sq of squares) {
       squaresIndexes.push(this.squareIndex(`${sq.file}${sq.rank}`))
+    }
+
+    return squaresIndexes
+  }
+  diagonalIndexes(squares) {
+    const squaresIndexes = []
+    for (let sq of squares) {
+      squaresIndexes.push(this.squareIndex(`${sq}`))
     }
 
     return squaresIndexes
@@ -434,11 +441,51 @@ class Bishop extends Piece {
   move(src, dst) {
     //check if dst is occupied
     //check if path is occupied
-
+    console.log(`src: ${src} | dst: ${dst}`)
     //get diagonal from board
-    board.squareDiagonal(src)
-    console.log(src, dst)
-    return true
+    let possibleDiags = board.squareDiagonal(src)
+    let possibleMoves = []
+    let movable = false
+
+    //convert possible diagonal squares XY to square indexes
+
+    let possibleDiagsIdx = []
+    possibleDiags.forEach(possible => {
+      possibleDiagsIdx.push(board.diagonalIndexes(possible))
+    })
+    possibleDiagsIdx.forEach(diagsIdx => {
+
+      let path = []
+      if (diagsIdx.includes(dst)) {
+        console.log(diagsIdx.includes(dst))
+
+        //check for piece between src and dst
+        if (src > dst) {
+          possibleMoves = possibleDiagsIdx.reverse()
+          //get path squares between src and dst
+          path = possibleDiagsIdx.filter(pathMove => {
+            return pathMove < src && pathMove > dst
+          })
+        } else {
+          path = possibleDiagsIdx.filter(pathMove => {
+            return pathMove < dst && pathMove > src
+          })
+        }
+
+        // return true
+        const pathClear = path.every(pathSq => {
+          console.log(board.squareOccupied(pathSq))
+          return !board.squareOccupied(pathSq)
+        })
+
+        if (pathClear) {
+          movable = true
+        }
+      }
+
+    })
+    console.log('false')
+    return movable
   }
 }
 
