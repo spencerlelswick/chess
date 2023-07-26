@@ -179,7 +179,6 @@ class Board {
       }
     }
 
-
     possibleDiagonals = [...blackLeftDiagonals, ...blackRightDiagonals, ...whiteLeftDiagonals, ...whiteRightDiagonals]
     possibleDiagonals = possibleDiagonals.filter(arr => arr.length)
     this.diagonals = [...possibleDiagonals]
@@ -350,7 +349,6 @@ class King extends Piece {
   move() {
     console.log(`moving: ${this.name} to square`)
     return true;
-
   }
 }
 
@@ -402,7 +400,6 @@ class Queen extends Piece {
           return true
         }
       }
-
     }
     if (possibleRankIdx.includes(dst)) {
       //check for piece between src and dst
@@ -605,9 +602,9 @@ class Bishop extends Piece {
         if (pathClear) {
           if (board.squareOccupied(dst)) {
             console.log('occupied')
-            return board.squares[src].piece.color !== board.squares[dst].piece.color
+            movable = board.squares[src].piece.color !== board.squares[dst].piece.color
           } else {
-            return true
+            movable = true
           }
         }
       }
