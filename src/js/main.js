@@ -7,6 +7,7 @@ class Board {
     //maybe make this static
     this.files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     this.ranks = [8, 7, 6, 5, 4, 3, 2, 1]
+    this.diagonals = []
   }
   makeBoard() {
     let currColor = true
@@ -95,7 +96,96 @@ class Board {
   }
   //given a square, returns squares on that file.
   squareFile = square => this.squares.filter(fileSqs => board.squares[square].file === fileSqs.file)
+  //given a square, returns squares on that rank.
   squareRank = square => this.squares.filter(rankSqs => board.squares[square].rank === rankSqs.rank)
+  squareDiagonal = square => {
+    //for the given file/rank of square
+    //loop through each diagonal array
+    //return all diagonals that contain file/rank of square
+
+    console.log(`${this.squares[square]}`)
+
+    // this.squares.filter(diagSqs => {
+    //   return board.squares[square].rank === `${diagSqs.file}${diagSqs.rank}`
+    // })
+  }
+  //computes squares possible diagonals.
+  populateDiagonals() {
+    const filesLimitLow = this.files[0]
+    const filesLimitHigh = this.files[this.files.length - 1]
+    const ranksLimitLow = this.ranks[0]
+    const ranksLimitHigh = this.ranks[this.ranks.length - 1]
+
+    let blackRightDiagonals = []
+    let blackLeftDiagonals = [[], [], [], [], [], [], [], []]
+    let whiteLeftDiagonals = [[], [], [], [], [], [], [], []]
+    let whiteRightDiagonals = []
+
+    let possibleDiagonals = []
+
+    for (let s = 0; s < this.files.length; s++) {
+      let limitReached = false
+      blackRightDiagonals.push([])
+      for (let i = s; i < this.squares.length; i += 9) {
+        if (limitReached) break
+        if (filesLimitHigh === this.squares[i].file || ranksLimitHigh === this.squares[i].rank) {
+          console.log(`Hit ${filesLimitHigh} ${this.squares[i].file} OR ${ranksLimitHigh} ${this.squares[i].rank}`)
+          blackRightDiagonals[s].push(`${this.squares[i].file}${this.squares[i].rank}`)
+          limitReached = true
+        } else {
+          blackRightDiagonals[s].push(`${this.squares[i].file}${this.squares[i].rank}`)
+        }
+      }
+    }
+
+    for (let r = 7; r > 0; r--) {
+      console.log(r)
+      let limitReached = false
+      for (let i = r; i < this.squares.length; i += 7) {
+        if (limitReached) break
+        if (filesLimitLow === this.squares[i].file || ranksLimitHigh === this.squares[i].rank) {
+          console.log(`Hit ${filesLimitHigh} ${this.squares[i].file} OR ${ranksLimitHigh} ${this.squares[i].rank}`)
+          blackLeftDiagonals[r].push(`${this.squares[i].file}${this.squares[i].rank}`)
+          limitReached = true
+        } else {
+          blackLeftDiagonals[r].push(`${this.squares[i].file}${this.squares[i].rank}`)
+        }
+      }
+    }
+
+    for (let w = 56; w < this.squares.length; w++) {
+      let limitReached = false
+      whiteRightDiagonals.push([])
+      for (let i = w; i < this.squares.length; i -= 7) {
+        if (limitReached) break
+        if (filesLimitHigh === this.squares[i].file || ranksLimitLow === this.squares[i].rank) {
+          whiteRightDiagonals[w - 56].push(`${this.squares[i].file}${this.squares[i].rank}`)
+          limitReached = true
+        } else {
+          whiteRightDiagonals[w - 56].push(`${this.squares[i].file}${this.squares[i].rank}`)
+        }
+      }
+    }
+
+    for (let z = this.squares.length; z > 56; z--) {
+      let limitReached = false
+      for (let i = z; i < this.squares.length; i -= 9) {
+        if (limitReached) break
+        if (filesLimitLow === this.squares[i].file || ranksLimitLow === this.squares[i].rank) {
+          whiteLeftDiagonals[z - 56].push(`${this.squares[i].file}${this.squares[i].rank}`)
+          limitReached = true
+        } else {
+          whiteLeftDiagonals[z - 56].push(`${this.squares[i].file}${this.squares[i].rank}`)
+        }
+      }
+    }
+
+
+    possibleDiagonals = [...blackLeftDiagonals, ...blackRightDiagonals, ...whiteLeftDiagonals, ...whiteRightDiagonals]
+    possibleDiagonals = possibleDiagonals.filter(arr => arr.length)
+    this.diagonals = [...possibleDiagonals]
+    return possibleDiagonals
+  }
   //given a square, returns a square index
   squareIndex(square) {
     let file = square.slice(0, 1)
@@ -184,7 +274,6 @@ class Pawn extends Piece {
     if (src + this.moveDistance === dst) {
       this.movementRange = 1
       if (board.squareOccupied(dst)) {
-        console.log(`square is occupied`)
         return false
       }
       return true
@@ -345,6 +434,9 @@ class Bishop extends Piece {
   move(src, dst) {
     //check if dst is occupied
     //check if path is occupied
+
+    //get diagonal from board
+    board.squareDiagonal(src)
     console.log(src, dst)
     return true
   }
@@ -362,6 +454,7 @@ function playerMove(src, dst) {
 
 function init() {
   board.makeBoard()
+  board.populateDiagonals()
   board.populateBoard()
   board.drawBoard()
 }
