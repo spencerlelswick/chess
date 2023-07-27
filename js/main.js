@@ -1,7 +1,6 @@
 console.log('js:loaded')
 
 class Board {
-
   constructor() {
     this.squares = []
     //maybe make this static
@@ -13,6 +12,7 @@ class Board {
     this.whiteTurn = true
     this.winner = null
   }
+  //Given static rank and files, generate squares with alternating colors
   makeBoard() {
     let currColor = true
     for (let rank of this.ranks) {
@@ -24,10 +24,11 @@ class Board {
       currColor = !currColor
     }
   }
+  // given a boolean return string of light or dark
   toggleSquareColor() {
     toggleColor ? 'dark' : 'light'
   }
-
+  //check if its checkmate
   checkCheckmate() {
     console.log(board.isCheckmate)
 
@@ -39,15 +40,13 @@ class Board {
         }
       }
     })
-
     if (kingsLeft.length < 2) {
       this.isCheckmate = true
       this.winner = kingsLeft[0].piece.color
     } else {
       this.isCheckmate = false
     }
-    console.log(kingsLeft)
-    console.log(this.isCheckmate)
+
     if (this.isCheckmate && kingsLeft.length < 2) {
       const cmModal = document.querySelector('.modal')
       const cmLabel = document.querySelector('.modal-winner > span')
@@ -60,7 +59,8 @@ class Board {
       cmBtn.addEventListener('click', playAgain)
     }
   }
-
+  //Looks at current board state and tries to move for a given src and dst.
+  //If a move was made, redraw board with updated state
   drawBoard() {
     const boardEl = document.querySelector('.board')
     let src = null
@@ -93,8 +93,6 @@ class Board {
       }
     });
     boardEl.replaceChildren()
-
-
     this.squares.forEach(sq => {
       const square = document.createElement("div");
       // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
@@ -117,7 +115,7 @@ class Board {
       boardEl.classList.add()
     });
   }
-  //takes a src,dst. Moves piece to dst, removes from src.
+  //Given a src,dst. Moves piece to dst, removes from src.
   updatePieceSquare(src, dst) {
     let srcIdx = this.squareIndex(`${src.file}${src.rank}`)
     let dstIdx = this.squareIndex(`${dst.file}${dst.rank}`)
@@ -138,11 +136,8 @@ class Board {
     } else {
       // console.log(`it is ${colorTurn} to move.`)
     }
-
-
   }
-  // takes a square a1-h8 and converts it to square index
-
+  //Returns bool has piece of a given square
   squareOccupied(square) {
     let sq = board.squares[square]
     return sq.piece ? true : false
@@ -155,18 +150,12 @@ class Board {
   squareFile = square => this.squares.filter(fileSqs => board.squares[square].file === fileSqs.file)
   //given a square, returns squares on that rank.
   squareRank = square => this.squares.filter(rankSqs => board.squares[square].rank === rankSqs.rank)
-  squareDiagonal = square => {
-    //for the given file/rank of square
-    //loop through each diagonal array
-    //return all diagonals that contain file/rank of square
+  //given a square, returns diagonals that intersect with the src square
+  squareDiagonal = square => this.diagonals.filter(diag => {
+    return diag.includes(`${this.squares[square].file}${this.squares[square].rank}`)
+  })
 
-    const matchingDiags = this.diagonals.filter(diag => {
-      return diag.includes(`${this.squares[square].file}${this.squares[square].rank}`)
-    })
-
-    return matchingDiags
-  }
-  //computes squares possible diagonals.
+  //computes squares possible diagonals for each home-row square (a8-h8 and a1-h1)
   populateDiagonals() {
     const filesLimitLow = this.files[0]
     const filesLimitHigh = this.files[this.files.length - 1]
@@ -233,7 +222,6 @@ class Board {
         }
       }
     }
-
     possibleDiagonals = [...blackLeftDiagonals, ...blackRightDiagonals, ...whiteLeftDiagonals, ...whiteRightDiagonals]
     possibleDiagonals = possibleDiagonals.filter(arr => arr.length)
     this.diagonals = [...possibleDiagonals]
@@ -253,17 +241,17 @@ class Board {
     for (let sq of squares) {
       squaresIndexes.push(this.squareIndex(`${sq.file}${sq.rank}`))
     }
-
     return squaresIndexes
   }
+  //given array of squares in a diagonal, returns diagonal indexes
   diagonalIndexes(squares) {
     const squaresIndexes = []
     for (let sq of squares) {
       squaresIndexes.push(this.squareIndex(`${sq}`))
     }
-
     return squaresIndexes
   }
+  //populates board to new game state
   populateBoard() {
     this.squares[0].piece = new Rook('black')
     this.squares[1].piece = new Knight('black')
@@ -325,9 +313,7 @@ class Pawn extends Piece {
     this.moveDistance = color === 'white' ? -8 : 8
     this.sqControlled = []
   }
-  calcControll() {
-
-  }
+  calcControl() { }
   move(src, dst) {
     //check if dst is occupied
     //check if path is occupied
@@ -362,9 +348,7 @@ class Knight extends Piece {
     this.image = color === 'white' ? './assets/piece/wn.png' : './assets/piece/bn.png'
     this.sqControlled = []
   }
-  calcControll() {
-
-  }
+  calcControl() { }
   move(src, dst) {
     //knight moves in L shapes
     //which is always a variation of +/-(1 or 2)x(1 or 2)y
@@ -401,20 +385,16 @@ class King extends Piece {
     this.hasMoved = false
     this.sqControlled = []
   }
-  calcControll() {
-
-  }
+  calcControl() { }
   move(src, dst) {
     let possibleFile = board.squareFile(src)
     let possibleRank = board.squareRank(src)
     let possibleFileIdx = board.squaresIndexes(possibleFile)
     let possibleRankIdx = board.squaresIndexes(possibleRank)
     let possibleMoves = [...possibleFileIdx, ...possibleRankIdx]
-    let path = []
     let kingMoves = []
     let possibleDiags = board.squareDiagonal(src)
     let movable = false
-
     //convert possible diagonal squares XY to square indexes
     let possibleDiagsIdx = []
 
@@ -476,7 +456,7 @@ class Queen extends Piece {
     this.image = color === 'white' ? './assets/piece/wq.png' : './assets/piece/bq.png'
     this.sqControlled = []
   }
-  calcControll(src) {
+  calcControl(src) {
     this.sqControlled = []
     let possibleFile = board.squareFile(src)
     let possibleRank = board.squareRank(src)
@@ -504,11 +484,6 @@ class Queen extends Piece {
       }
     }
 
-
-
-
-
-
     // if (possibleRankIdx.includes(dst)) {
     //   //check for piece between src and dst
     //   if (src > dst) {
@@ -535,7 +510,6 @@ class Queen extends Piece {
     //     }
     //   }
     // }
-
 
     // possibleDiags.forEach(possible => {
     //   possibleDiagsIdx.push(board.diagonalIndexes(possible))
@@ -570,11 +544,10 @@ class Queen extends Piece {
     //   }
     // })
 
-
     return this.sqControlled
   }
   move(src, dst) {
-    this.calcControll(dst)
+    this.calcControl(dst)
     let possibleFile = board.squareFile(src)
     let possibleRank = board.squareRank(src)
     let possibleFileIdx = board.squaresIndexes(possibleFile)
@@ -686,9 +659,7 @@ class Rook extends Piece {
     this.hasMoved = false
     this.sqControlled = []
   }
-  calcControll() {
-
-  }
+  calcControl() { }
   move(src, dst) {
     //get current rank
     // allowed to move on rank if not blocked
@@ -766,9 +737,7 @@ class Bishop extends Piece {
 
     this.sqControlled = []
   }
-  calcControll() {
-
-  }
+  calcControl() { }
   move(src, dst) {
     //check if dst is occupied
     //check if path is occupied
@@ -810,20 +779,9 @@ class Bishop extends Piece {
           }
         }
       }
-
     })
     return movable
   }
-}
-
-function playerMove(src, dst) {
-  //check if player turn
-  //check for check
-  //check for checkmate
-  //check for stalemate
-  //check for draw
-  //check for piece on square
-  //calculate movement
 }
 
 function playAgain() {
@@ -831,9 +789,7 @@ function playAgain() {
   for (let i = 0; i < board.squares.length; i++) {
     board.squares[i].piece = null
   }
-
   board.whiteTurn = true
-
   board.populateBoard()
   board.populateDiagonals()
   board.drawBoard()
