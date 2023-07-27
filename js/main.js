@@ -342,8 +342,6 @@ class Pawn extends Piece {
       }
       return false
     }
-
-
     return false
   }
 }
@@ -490,7 +488,6 @@ class Queen extends Piece {
     //     break;
     //   }
     // }
-
     // Queen UP file attack
     for (let i = possibleFileIdx.indexOf(src); i < possibleFileIdx.reverse().length; i--) {
       this.sqControlled.push(possibleMoves[i])
@@ -721,7 +718,6 @@ class Rook extends Piece {
           return true
         }
       }
-
     }
     if (possibleRankIdx.includes(dst)) {
       //check for piece between src and dst

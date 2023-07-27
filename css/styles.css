@@ -31,7 +31,6 @@ aside {
 
 
 .board {
-
   margin: 1rem;
   display: grid;
   grid-template-columns: repeat(8, 1fr);
