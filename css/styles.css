@@ -28,7 +28,7 @@ aside {
 
 .board-container {
   padding: 2rem;
-  background-image: url('/assets/img/board-border.jpg');
+  background-image: url('./assets/img/board-border.jpg');
   background-repeat: no-repeat;
   background-size: cover;
 }
