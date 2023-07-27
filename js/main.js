@@ -29,6 +29,8 @@ class Board {
   }
 
   checkCheckmate() {
+    console.log(board.isCheckmate)
+
     let kingsLeft = []
     this.squares.forEach(square => {
       if (square.piece !== null) {
@@ -41,18 +43,24 @@ class Board {
     if (kingsLeft.length < 2) {
       this.isCheckmate = true
       this.winner = kingsLeft[0].piece.color
+    } else {
+      this.isCheckmate = false
     }
-
-    if (this.isCheckmate) {
+    console.log(kingsLeft)
+    console.log(this.isCheckmate)
+    if (this.isCheckmate && kingsLeft.length < 2) {
       const cmModal = document.querySelector('.modal')
       const cmLabel = document.querySelector('.modal-winner > span')
+      const cmBtn = document.querySelector('.modal-play-btn')
       const cmMessage = `${this.winner}`
       cmLabel.innerText = cmMessage
       cmModal.classList.add('.checkmate')
       cmLabel.innerText = `${cmMessage}`
       cmModal.setAttribute("style", "display:flex;");
+      cmBtn.addEventListener('click', playAgain)
     }
   }
+
   drawBoard() {
     const boardEl = document.querySelector('.board')
     let src = null
@@ -261,7 +269,7 @@ class Board {
     this.squares[1].piece = new Knight('black')
     this.squares[2].piece = new Bishop('black')
     this.squares[3].piece = new Queen('black')
-    this.squares[19].piece = new King('black')
+    this.squares[4].piece = new King('black')
     this.squares[5].piece = new Bishop('black')
     this.squares[6].piece = new Knight('black')
     this.squares[7].piece = new Rook('black')
@@ -276,7 +284,7 @@ class Board {
     this.squares[56].piece = new Rook('white')
     this.squares[57].piece = new Knight('white')
     this.squares[58].piece = new Bishop('white')
-    this.squares[43].piece = new Queen('white')
+    this.squares[59].piece = new Queen('white')
     this.squares[60].piece = new King('white')
     this.squares[61].piece = new Bishop('white')
     this.squares[62].piece = new Knight('white')
@@ -657,7 +665,6 @@ class Queen extends Piece {
 
         if (pathClear) {
           if (board.squareOccupied(dst)) {
-            console.log(dst)
             movable = board.squares[src].piece.color !== board.squares[dst].piece.color
           } else {
             movable = true
@@ -819,11 +826,23 @@ function playerMove(src, dst) {
   //calculate movement
 }
 
+function playAgain() {
+  document.querySelector('.modal').setAttribute("style", "display:none;");
+  for (let i = 0; i < board.squares.length; i++) {
+    board.squares[i].piece = null
+  }
+
+  board.whiteTurn = true
+
+  board.populateBoard()
+  board.populateDiagonals()
+  board.drawBoard()
+}
 
 function init() {
   board.makeBoard()
-  board.populateDiagonals()
   board.populateBoard()
+  board.populateDiagonals()
   board.drawBoard()
 }
 

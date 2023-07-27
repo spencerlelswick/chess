@@ -25,18 +25,19 @@ aside {
   align-items: center;
 }
 
-.app-wrapper {}
-
-.header-logo {}
-
+.board-container {
+  padding: 2rem;
+  background-image: url('/assets/img/board-border.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
 .board {
-  margin: 1rem;
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  height: 80vh;
-  width: 80vh;
+  max-height: 800px;
+  max-width: 800px;
 }
 
 .modal {
