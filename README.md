@@ -1,10 +1,11 @@
-# chess
+# Chess 
 
-- **test** with these sections:
+<img src="https://i.imgur.com/d89A4Zm.png" width="400">
 
-  ☐ **Chess**
+## Overview
 
-  ☐ **A description of your game**
+Chess is the Game of Kings where two armies (White and Black) clash for control of the center, overpower the other in order to checkmate the opponents king.
+
   
   ☐ **Screenshot(s):** of game
   
