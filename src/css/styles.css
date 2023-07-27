@@ -38,6 +38,10 @@ aside {
   grid-template-rows: repeat(8, 1fr);
 }
 
+.checkmate {
+  color: rgb(255, 255, 255);
+}
+
 .light-square {
   text-align: center;
   width: 3rem;

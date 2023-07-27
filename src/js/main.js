@@ -11,6 +11,7 @@ class Board {
     this.isCheck = false
     this.isCheckmate = false
     this.whiteTurn = true
+    this.winner = null
   }
   makeBoard() {
     let currColor = true
@@ -25,6 +26,32 @@ class Board {
   }
   toggleSquareColor() {
     toggleColor ? 'dark' : 'light'
+  }
+
+  checkCheckmate() {
+    let kingsLeft = []
+    this.squares.forEach(square => {
+      if (square.piece !== null) {
+        if (square.piece.type === 'king') {
+          kingsLeft.push(square)
+        }
+      }
+    })
+
+    if (kingsLeft.length < 2) {
+      this.isCheckmate = true
+      this.winner = kingsLeft[0].piece.color
+    }
+
+    if (this.isCheckmate) {
+      const cmMessage = `Checkmate! ${this.winner} wins!`
+      const cmModal = document.querySelector('.checkmate')
+      const cmLabel = document.createElement('span');
+      // squareLabel.innerText = `${sq.file}${sq.rank}`
+      cmLabel.innerText = cmMessage
+      cmModal.classList.add('.checkmate')
+      cmModal.appendChild(cmLabel)
+    }
   }
   drawBoard() {
     const boardEl = document.querySelector('.board')
@@ -46,7 +73,6 @@ class Board {
         if (src.piece && dst) {
           if (src.rank === dst.rank && src.file === dst.file) {
             dst = null
-            console.log('Destination matched src square')
           } else {
             this.updatePieceSquare(src, dst)
           }
@@ -66,10 +92,11 @@ class Board {
       // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
       // square.appendChild(pieceName)
       const squareLabel = document.createElement('span');
-      // squareLabel.innerText = `${sq.file}${sq.rank}`
+      squareLabel.innerText = `${sq.file}${sq.rank}`
       squareLabel.innerText = this.squareIndex(`${sq.file}${sq.rank}`)
       square.classList.add('squareLabel')
-      square.appendChild(squareLabel)
+      // $DEMO
+      // square.appendChild(squareLabel)
       if (sq.piece) {
         const pieceImg = document.createElement('img')
         sq.piece.type === 'pawn' ? pieceImg.classList.add('pawn') : pieceImg.classList.add('piece')
@@ -91,9 +118,6 @@ class Board {
     if (src.piece.color === colorTurn) {
       // if players turn check if king is attacked
       if (this.squareAttacked(srcIdx)) {
-        console.log(srcIdx)
-        console.log(`${srcIdx} is attacked`)
-        console.log(`${dstIdx} attacked ? ${this.squareAttacked(dstIdx)}`)
       }
 
       if (src.piece.move(srcIdx, dstIdx)) {
@@ -101,9 +125,10 @@ class Board {
         src.piece = null
         this.whiteTurn = !this.whiteTurn
       }
+      this.checkCheckmate()
       board.drawBoard()
     } else {
-      console.log(`it is ${colorTurn} to move.`)
+      // console.log(`it is ${colorTurn} to move.`)
     }
 
 
@@ -539,7 +564,6 @@ class Queen extends Piece {
     //     }
     //   }
     // })
-    console.log(this.sqControlled)
 
 
     return this.sqControlled
@@ -616,7 +640,6 @@ class Queen extends Piece {
       possibleDiagsIdx.push(board.diagonalIndexes(possible))
     })
     possibleDiagsIdx.forEach(diagsIdx => {
-
       let path = []
       if (diagsIdx.includes(dst)) {
 
@@ -637,7 +660,8 @@ class Queen extends Piece {
 
         if (pathClear) {
           if (board.squareOccupied(dst)) {
-            return board.squares[src].piece.color !== board.squares[dst].piece.color
+            console.log(dst)
+            movable = board.squares[src].piece.color !== board.squares[dst].piece.color
           } else {
             movable = true
           }
