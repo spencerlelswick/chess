@@ -3,7 +3,6 @@ console.log('js:loaded')
 class Board {
   constructor() {
     this.squares = []
-    //maybe make this static
     this.files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     this.ranks = [8, 7, 6, 5, 4, 3, 2, 1]
     this.diagonals = []
@@ -30,8 +29,6 @@ class Board {
   }
   //check if its checkmate
   checkCheckmate() {
-    console.log(board.isCheckmate)
-
     let kingsLeft = []
     this.squares.forEach(square => {
       if (square.piece !== null) {

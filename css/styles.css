@@ -7,8 +7,6 @@ body {
   background-color: rgb(90, 90, 90);
 }
 
-header {}
-
 main {
   padding: 1rem;
   display: flex;
@@ -55,8 +53,6 @@ aside {
   text-shadow: 1px 1px rgb(227, 172, 105);
   border-radius: 20px;
 }
-
-.modal-result {}
 
 .modal-winner>span {
   text-transform: capitalize;
@@ -105,7 +101,7 @@ aside {
 }
 
 .squareLabel span {
-  font-size: 30px;
+  font-size: 80px;
   color: rgba(255, 0, 0, 0.274);
   position: absolute;
   pointer-events: none;
