@@ -312,7 +312,7 @@ class Pawn extends Piece {
     super(color)
     this.type = 'pawn'
     this.name = color === 'white' ? 'P' : 'p'
-    this.image = color === 'white' ? 'src/assets/piece/wp.png' : 'src/assets/piece/bp.png'
+    this.image = color === 'white' ? '/src/assets/piece/wp.png' : '/src/assets/piece/bp.png'
     this.movementRange = 2
     this.moveDistance = color === 'white' ? -8 : 8
     this.sqControlled = []
@@ -353,7 +353,7 @@ class Knight extends Piece {
     super(color)
     this.type = 'knight'
     this.name = color === 'white' ? 'N' : 'n'
-    this.image = color === 'white' ? 'src/assets/piece/wn.png' : 'src/assets/piece/bn.png'
+    this.image = color === 'white' ? '/src/assets/piece/wn.png' : '/src/assets/piece/bn.png'
     this.sqControlled = []
   }
   calcControll() {
@@ -391,7 +391,7 @@ class King extends Piece {
     super(color)
     this.type = 'king'
     this.name = color === 'white' ? 'K' : 'k'
-    this.image = color === 'white' ? 'src/assets/piece/wk.png' : 'src/assets/piece/bk.png'
+    this.image = color === 'white' ? '/src/assets/piece/wk.png' : '/src/assets/piece/bk.png'
     this.hasMoved = false
     this.sqControlled = []
   }
@@ -467,7 +467,7 @@ class Queen extends Piece {
     super(color)
     this.type = 'queen'
     this.name = color === 'white' ? 'Q' : 'q'
-    this.image = color === 'white' ? 'src/assets/piece/wq.png' : 'src/assets/piece/bq.png'
+    this.image = color === 'white' ? '/src/assets/piece/wq.png' : '/src/assets/piece/bq.png'
     this.sqControlled = []
   }
   calcControll(src) {
@@ -678,7 +678,7 @@ class Rook extends Piece {
     super(color)
     this.type = 'rook'
     this.name = color === 'white' ? 'R' : 'r'
-    this.image = color === 'white' ? 'src/assets/piece/wr.png' : 'src/assets/piece/br.png'
+    this.image = color === 'white' ? '/src/assets/piece/wr.png' : '/src/assets/piece/br.png'
     this.hasMoved = false
     this.sqControlled = []
   }
@@ -759,7 +759,7 @@ class Bishop extends Piece {
     super(color)
     this.type = 'bishop'
     this.name = color === 'white' ? 'B' : 'b'
-    this.image = color === 'white' ? 'src/assets/piece/wb.png' : 'src/assets/piece/bb.png'
+    this.image = color === 'white' ? '/src/assets/piece/wb.png' : '/src/assets/piece/bb.png'
 
     this.sqControlled = []
   }
