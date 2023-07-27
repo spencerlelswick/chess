@@ -1,7 +1,7 @@
 # Chess 
 
 <img src="https://i.imgur.com/UAtdaDr.png" width="400">
-
+<a href="https://spencerlelswick.github.io/chess/">My Chess Project</a>
 
 ## Overview
 
