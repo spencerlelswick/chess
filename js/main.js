@@ -44,13 +44,13 @@ class Board {
     }
 
     if (this.isCheckmate) {
-      const cmMessage = `Checkmate! ${this.winner} wins!`
-      const cmModal = document.querySelector('.checkmate')
-      const cmLabel = document.createElement('span');
-      // squareLabel.innerText = `${sq.file}${sq.rank}`
+      const cmModal = document.querySelector('.modal')
+      const cmLabel = document.querySelector('.modal-winner > span')
+      const cmMessage = `${this.winner}`
       cmLabel.innerText = cmMessage
       cmModal.classList.add('.checkmate')
-      cmModal.appendChild(cmLabel)
+      cmLabel.innerText = `${cmMessage}`
+      cmModal.setAttribute("style", "display:flex;");
     }
   }
   drawBoard() {
@@ -261,7 +261,7 @@ class Board {
     this.squares[1].piece = new Knight('black')
     this.squares[2].piece = new Bishop('black')
     this.squares[3].piece = new Queen('black')
-    this.squares[4].piece = new King('black')
+    this.squares[19].piece = new King('black')
     this.squares[5].piece = new Bishop('black')
     this.squares[6].piece = new Knight('black')
     this.squares[7].piece = new Rook('black')
@@ -276,7 +276,7 @@ class Board {
     this.squares[56].piece = new Rook('white')
     this.squares[57].piece = new Knight('white')
     this.squares[58].piece = new Bishop('white')
-    this.squares[59].piece = new Queen('white')
+    this.squares[43].piece = new Queen('white')
     this.squares[60].piece = new King('white')
     this.squares[61].piece = new Bishop('white')
     this.squares[62].piece = new Knight('white')

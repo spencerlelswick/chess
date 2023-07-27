@@ -35,16 +35,47 @@ aside {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
+  height: 80vh;
+  width: 80vh;
 }
 
-.checkmate {
-  color: rgb(255, 255, 255);
+.modal {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  position: absolute;
+  width: 50vh;
+  align-items: center;
+  color: rgb(150, 100, 50);
+  background-color: rgb(243, 226, 206);
+  border: rgb(150, 100, 50) 10px solid;
+  font-size: 36px;
+  text-shadow: 1px 1px rgb(227, 172, 105);
+  border-radius: 20px;
+}
+
+.modal-result {}
+
+.modal-winner>span {
+  text-transform: capitalize;
+}
+
+.modal-play-btn {
+  border-radius: 10px;
+  background-color: rgb(227, 172, 105);
+  border: 3px rgb(150, 100, 50) solid;
+  margin: 1rem;
+  color: rgb(150, 100, 50);
+  text-shadow: 1px 1px rgb(243, 226, 206);
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 28px;
 }
 
 .light-square {
   text-align: center;
-  width: 3rem;
-  height: 3rem;
   background-color: rgb(243, 226, 206);
   display: flex;
   justify-content: center;
@@ -53,8 +84,6 @@ aside {
 
 .dark-square {
   text-align: center;
-  width: 3rem;
-  height: 3rem;
   background-color: rgb(227, 172, 105);
   display: flex;
   justify-content: center;
