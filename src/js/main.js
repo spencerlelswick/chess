@@ -59,13 +59,15 @@ class Board {
       }
     });
     boardEl.replaceChildren()
+
+
     this.squares.forEach(sq => {
       const square = document.createElement("div");
       // const pieceName = document.createTextNode(sq.piece ? sq.piece.name : '');
       // square.appendChild(pieceName)
       const squareLabel = document.createElement('span');
-      squareLabel.innerText = `${sq.file}${sq.rank}`
-      square.appendChild(squareLabel);
+      // squareLabel.innerText = `${sq.file}${sq.rank}`
+      squareLabel.innerText = this.squareIndex(`${sq.file}${sq.rank}`)
       square.classList.add('squareLabel')
       square.appendChild(squareLabel)
       if (sq.piece) {
@@ -87,13 +89,19 @@ class Board {
     let colorTurn = this.whiteTurn ? 'white' : 'black'
 
     if (src.piece.color === colorTurn) {
+      // if players turn check if king is attacked
+      if (this.squareAttacked(srcIdx)) {
+        console.log(srcIdx)
+        console.log(`${srcIdx} is attacked`)
+        console.log(`${dstIdx} attacked ? ${this.squareAttacked(dstIdx)}`)
+      }
+
       if (src.piece.move(srcIdx, dstIdx)) {
         dst.piece = src.piece
         src.piece = null
         this.whiteTurn = !this.whiteTurn
       }
       board.drawBoard()
-      console.log(this.whiteTurn)
     } else {
       console.log(`it is ${colorTurn} to move.`)
     }
@@ -106,8 +114,9 @@ class Board {
     let sq = board.squares[square]
     return sq.piece ? true : false
   }
-  squareAttacked(square) {
+  squareAttacked(src) {
 
+    return false
   }
   //given a square, returns squares on that file.
   squareFile = square => this.squares.filter(fileSqs => board.squares[square].file === fileSqs.file)
@@ -281,7 +290,10 @@ class Pawn extends Piece {
     this.image = color === 'white' ? 'assets/piece/wp.png' : 'assets/piece/bp.png'
     this.movementRange = 2
     this.moveDistance = color === 'white' ? -8 : 8
-    this.possibleMoves = []
+    this.sqControlled = []
+  }
+  calcControll() {
+
   }
   move(src, dst) {
     //check if dst is occupied
@@ -317,6 +329,9 @@ class Knight extends Piece {
     this.type = 'knight'
     this.name = color === 'white' ? 'N' : 'n'
     this.image = color === 'white' ? 'assets/piece/wn.png' : 'assets/piece/bn.png'
+    this.sqControlled = []
+  }
+  calcControll() {
 
   }
   move(src, dst) {
@@ -353,6 +368,10 @@ class King extends Piece {
     this.name = color === 'white' ? 'K' : 'k'
     this.image = color === 'white' ? 'assets/piece/wk.png' : 'assets/piece/bk.png'
     this.hasMoved = false
+    this.sqControlled = []
+  }
+  calcControll() {
+
   }
   move(src, dst) {
     let possibleFile = board.squareFile(src)
@@ -398,26 +417,17 @@ class King extends Piece {
           possibleMoves = diagsIdx
           kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
           kingMoves.push(possibleMoves[possibleMoves.indexOf(src) - 1])
-
         } else {
           possibleMoves = diagsIdx.reverse()
-
           kingMoves.push(possibleMoves[possibleMoves.indexOf(src) + 1])
           kingMoves.push(possibleMoves[possibleMoves.indexOf(src) - 1])
-
-
         }
       }
     })
 
     if (kingMoves.includes(dst)) {
-      console.log(kingMoves)
-      console.log(kingMoves.includes(dst))
       if (board.squareOccupied(dst)) {
         movable = board.squares[src].piece.color !== board.squares[dst].piece.color
-        console.log(board.squares[src].piece.color)
-        console.log(board.squares[dst].piece.color)
-        console.log(movable)
       } else {
         movable = true
       }
@@ -433,7 +443,109 @@ class Queen extends Piece {
     this.type = 'queen'
     this.name = color === 'white' ? 'Q' : 'q'
     this.image = color === 'white' ? 'assets/piece/wq.png' : 'assets/piece/bq.png'
-  } move(src, dst) {
+    this.sqControlled = []
+  }
+  calcControll(src) {
+    this.sqControlled = []
+    let possibleFile = board.squareFile(src)
+    let possibleRank = board.squareRank(src)
+    let possibleFileIdx = board.squaresIndexes(possibleFile)
+    let possibleRankIdx = board.squaresIndexes(possibleRank)
+    let possibleMoves = [...possibleFileIdx, ...possibleRankIdx]
+    let path = []
+    let possibleDiags = board.squareDiagonal(src)
+    let movable = false
+    let possibleDiagsIdx = []
+
+
+    // Queen DOWN file attack
+    // for (let i = possibleFileIdx.indexOf(src); i < possibleFileIdx.reverse().length; i++) {
+    //   this.sqControlled.push(possibleMoves[i])
+    //   if (board.squareOccupied(possibleMoves[i])) {
+    //     break;
+    //   }
+    // }
+
+    // Queen UP file attack
+    for (let i = possibleFileIdx.indexOf(src); i < possibleFileIdx.reverse().length; i--) {
+      this.sqControlled.push(possibleMoves[i])
+      if (board.squareOccupied(possibleMoves[i])) {
+        break;
+      }
+    }
+
+
+
+
+
+
+    // if (possibleRankIdx.includes(dst)) {
+    //   //check for piece between src and dst
+    //   if (src > dst) {
+    //     possibleMoves = possibleRankIdx.reverse()
+    //     //get path squares between src and dst
+    //     path = possibleRankIdx.filter(pathMove => {
+    //       return pathMove < src && pathMove > dst
+    //     })
+    //   } else {
+    //     path = possibleRankIdx.filter(pathMove => {
+    //       return pathMove < dst && pathMove > src
+    //     })
+    //   }
+
+    //   const pathClear = path.every(pathSq => {
+    //     return !board.squareOccupied(pathSq)
+    //   })
+
+    //   if (pathClear) {
+    //     if (board.squareOccupied(dst)) {
+    //       return board.squares[src].piece.color !== board.squares[dst].piece.color
+    //     } else {
+    //       return true
+    //     }
+    //   }
+    // }
+
+
+    // possibleDiags.forEach(possible => {
+    //   possibleDiagsIdx.push(board.diagonalIndexes(possible))
+    // })
+    // possibleDiagsIdx.forEach(diagsIdx => {
+
+    //   let path = []
+    //   if (diagsIdx.includes(dst)) {
+
+    //     //check for piece between src and dst
+    //     if (src > dst) {
+    //       //get path squares between src and dst
+    //       path = diagsIdx.filter(pathMove => {
+    //         return pathMove < src && pathMove > dst
+    //       })
+    //     } else {
+    //       path = diagsIdx.filter(pathMove => {
+    //         return pathMove < dst && pathMove > src
+    //       })
+    //     }
+    //     const pathClear = path.every(pathSq => {
+    //       return !board.squareOccupied(pathSq)
+    //     })
+
+    //     if (pathClear) {
+    //       if (board.squareOccupied(dst)) {
+    //         return board.squares[src].piece.color !== board.squares[dst].piece.color
+    //       } else {
+    //         movable = true
+    //       }
+    //     }
+    //   }
+    // })
+    console.log(this.sqControlled)
+
+
+    return this.sqControlled
+  }
+  move(src, dst) {
+    this.calcControll(dst)
     let possibleFile = board.squareFile(src)
     let possibleRank = board.squareRank(src)
     let possibleFileIdx = board.squaresIndexes(possibleFile)
@@ -466,7 +578,6 @@ class Queen extends Piece {
 
       if (pathClear) {
         if (board.squareOccupied(dst)) {
-          console.log(board.squareOccupied(dst))
           return board.squares[src].piece.color !== board.squares[dst].piece.color
         } else {
           return true
@@ -545,6 +656,10 @@ class Rook extends Piece {
     this.name = color === 'white' ? 'R' : 'r'
     this.image = color === 'white' ? 'assets/piece/wr.png' : 'assets/piece/br.png'
     this.hasMoved = false
+    this.sqControlled = []
+  }
+  calcControll() {
+
   }
   move(src, dst) {
     //get current rank
@@ -621,6 +736,11 @@ class Bishop extends Piece {
     this.type = 'bishop'
     this.name = color === 'white' ? 'B' : 'b'
     this.image = color === 'white' ? 'assets/piece/wb.png' : 'assets/piece/bb.png'
+
+    this.sqControlled = []
+  }
+  calcControll() {
+
   }
   move(src, dst) {
     //check if dst is occupied
